@@ -1,0 +1,36 @@
+version: '3'
+services:
+  db_task:
+    image: postgres:12
+    restart: always
+    hostname: task
+    user: root
+    ports:
+      - "5416:5432"
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: postgres
+      POSTGRES_DB: task_cloud
+      POSTGRES_HOST_AUTH_METHOD: trust
+    network_mode: "bridge"
+
+  db_user:
+    image: postgres:12
+    restart: always
+    hostname: user
+    user: root
+    ports:
+      - "5415:5432"
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: postgres
+      POSTGRES_DB: user_cloud
+      POSTGRES_HOST_AUTH_METHOD: trust
+    network_mode: "bridge"
+
+
+
+
+
+
+
