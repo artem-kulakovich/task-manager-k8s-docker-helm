@@ -1,5 +1,6 @@
 package by.bntu.fitr.authenticationservice.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,12 +17,12 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "\"role\"")
-public class Role {
+@Table(name = "project_role")
+public class ProjectRole {
     @JsonProperty(value = "id")
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
-    @SequenceGenerator(name = "role_seq", sequenceName = "role_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_role_seq")
+    @SequenceGenerator(name = "project_role_seq", sequenceName = "project_role_id_seq", allocationSize = 1)
     @Setter(value = AccessLevel.PRIVATE)
     private long id;
 
@@ -32,28 +33,27 @@ public class Role {
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinTable(
-            name = "role_permissions",
-            joinColumns = @JoinColumn(name = "role_id"),
+            name = "project_role_permissions",
+            joinColumns = @JoinColumn(name = "project_role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
-    private List<Permission> rolePermissionList;
+    private List<Permission> projectRolePermissionList;
 
-
-    public Role(String name) {
+    public ProjectRole(String name) {
         this.name = name;
     }
 
     public void addPermission(Permission permission) {
-        if (rolePermissionList == null) {
-            rolePermissionList = new ArrayList<>();
+        if (projectRolePermissionList == null) {
+            projectRolePermissionList = new ArrayList<>();
         }
-        rolePermissionList.add(permission);
+        projectRolePermissionList.add(permission);
     }
 
     public void addPermission(List<Permission> permissions) {
-        if (rolePermissionList == null) {
-            rolePermissionList = new ArrayList<>();
+        if (projectRolePermissionList == null) {
+            projectRolePermissionList = new ArrayList<>();
         }
-        rolePermissionList.addAll(permissions);
+        projectRolePermissionList.addAll(permissions);
     }
 }

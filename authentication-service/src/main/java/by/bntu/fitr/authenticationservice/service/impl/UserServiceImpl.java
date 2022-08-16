@@ -1,9 +1,12 @@
 package by.bntu.fitr.authenticationservice.service.impl;
 
+import by.bntu.fitr.authenticationservice.constant.CommonConstant;
 import by.bntu.fitr.authenticationservice.constant.ErrorMessageConstant;
-import by.bntu.fitr.authenticationservice.constant.RoleConstant;
 import by.bntu.fitr.authenticationservice.dto.UserCreateDTO;
 import by.bntu.fitr.authenticationservice.dto.UserLoginDTO;
+import by.bntu.fitr.authenticationservice.entity.Permission;
+import by.bntu.fitr.authenticationservice.entity.ProjectRole;
+import by.bntu.fitr.authenticationservice.entity.Role;
 import by.bntu.fitr.authenticationservice.entity.User;
 import by.bntu.fitr.authenticationservice.exception.LoginException;
 import by.bntu.fitr.authenticationservice.exception.PasswordMismatchException;
@@ -13,6 +16,7 @@ import by.bntu.fitr.authenticationservice.jwt.JWTUtil;
 import by.bntu.fitr.authenticationservice.mapper.UserMapper;
 import by.bntu.fitr.authenticationservice.repository.UserRepository;
 import by.bntu.fitr.authenticationservice.jwt.JWTTokenProvider;
+import by.bntu.fitr.authenticationservice.service.PermissionService;
 import by.bntu.fitr.authenticationservice.service.RoleService;
 import by.bntu.fitr.authenticationservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +25,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final JWTUtil jwtUtil;
-    private final RoleService roleService;
+    private final PermissionService permissionService;
     private final UserMapper userMapper;
     private final JWTTokenProvider jwtTokenProvider;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            JWTUtil jwtUtil,
-                           RoleService roleService,
+                           PermissionService permissionService,
                            UserMapper userMapper,
                            JWTTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
-        this.roleService = roleService;
+        this.permissionService = permissionService;
         this.userMapper = userMapper;
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -73,11 +78,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String login(UserLoginDTO userLoginDTO) {
+    public String login(final UserLoginDTO userLoginDTO) {
         try {
             User user = getUserByUserName(userLoginDTO.getUserName());
-            String token = jwtTokenProvider.createToken(user.getUserName(), user.getEmail(), user.getId());
-            return token;
+            Role role = user.getRole();
+            ProjectRole projectRole = user.getProjectRole();
+            return jwtTokenProvider.createToken(user.getId(),
+                    user.getUserName(),
+                    user.getEmail(),
+                    role == null ? CommonConstant.EMPTY_STRING : role.getName(),
+                    projectRole == null ? CommonConstant.EMPTY_STRING : projectRole.getName(),
+                    permissionService.getRolePermissionsName(role),
+                    permissionService.getProjectRolePermissionsName(projectRole)
+
+            );
         } catch (UserNotFoundException e) {
             throw new LoginException(ErrorMessageConstant.CANT_LOGIN_EXCEPTION_MSG);
         }

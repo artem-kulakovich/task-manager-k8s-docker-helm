@@ -4,4 +4,5 @@ public interface RoleConstant {
     String NONE = "NONE";
     String USER = "USER";
     String ADMIN = "ADMIN";
+
 }

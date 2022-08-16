@@ -43,8 +43,12 @@ public class User {
     private String password;
 
     @JsonProperty(value = "role")
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     private Role role;
+
+    @JsonProperty(value = "project_role")
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    private ProjectRole projectRole;
 
     public User(String firstName, String lastName, String userName, String password, String email) {
         this.firstName = firstName;
