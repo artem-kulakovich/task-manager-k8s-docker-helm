@@ -15,7 +15,7 @@ public class UserMapper {
         this.roleMapper = roleMapper;
     }
 
-    public User toUser(UserCreateDTO userCreateDTO) {
+    public User toUser(final UserCreateDTO userCreateDTO) {
         return new User(
                 userCreateDTO.getFirstName(),
                 userCreateDTO.getLastName(),

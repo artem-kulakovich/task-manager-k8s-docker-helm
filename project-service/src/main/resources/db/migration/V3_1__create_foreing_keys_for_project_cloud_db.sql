@@ -1,5 +1,5 @@
-alter table public."project"
-    add foreign key (project_info_id) references public."project_info" (project_code_id);
+alter table public."project_info"
+    add foreign key (project_code_id) references public."project" (id);
 
 alter table public."project_info"
     add foreign key (project_role_id) references public."project_role" (id);

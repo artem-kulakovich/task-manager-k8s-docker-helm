@@ -11,5 +11,4 @@ import java.util.Set;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
-    List<Project> findByUserId(long userId);
 }

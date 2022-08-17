@@ -1,5 +1,6 @@
 package by.bntu.fitr.authenticationservice.service.impl;
 
+import by.bntu.fitr.authenticationservice.constant.CommonConstant;
 import by.bntu.fitr.authenticationservice.entity.Role;
 import by.bntu.fitr.authenticationservice.exception.RoleNotFoundException;
 import by.bntu.fitr.authenticationservice.repository.RoleRepository;
@@ -21,5 +22,10 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findByName(name).orElseThrow(
                 () -> new RoleNotFoundException("Role")
         );
+    }
+
+    @Override
+    public String getRoleName(final Role role) {
+        return role == null ? CommonConstant.EMPTY_STRING : role.getName();
     }
 }

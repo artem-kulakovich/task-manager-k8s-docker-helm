@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -47,8 +48,13 @@ public class User {
     private Role role;
 
     @JsonProperty(value = "project_role")
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
-    private ProjectRole projectRole;
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_project_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_role_id")
+    )
+    private List<ProjectRole> projectRole;
 
     public User(String firstName, String lastName, String userName, String password, String email) {
         this.firstName = firstName;

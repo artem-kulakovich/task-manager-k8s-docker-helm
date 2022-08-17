@@ -15,6 +15,7 @@ import javax.annotation.PostConstruct;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -33,8 +34,8 @@ public class JWTTokenProvider {
     }
 
     public String createToken(long userId, String userName, String email,
-                              String roleName, String projectRoleName,
-                              List<String> rolePermissionsName, List<String> projectRolePermissionsName) {
+                              String roleName, List<String> projectRoleName,
+                              List<String> rolePermissionsName, Map<String, List<String>> projectRolePermissionsName) {
         Claims claims = Jwts.claims().setSubject(userName);
         claims.put(CommonConstant.EMAIL, email);
         claims.put(CommonConstant.USER_ID, userId);

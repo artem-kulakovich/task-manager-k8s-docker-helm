@@ -1,4 +1,4 @@
-package by.bntu.fitr.authenticationservice.constant;
+package by.bntu.fitr.projectservice.constant;
 
 public interface CommonConstant {
     String EMAIL = "email";
@@ -7,6 +7,8 @@ public interface CommonConstant {
     String ROLE_NAME = "role_name";
     String PROJECT_ROLE_NAME = "project_role_name";
     String PERMISSIONS_FOR_PROJECT_ROLE = "project_role_permissions";
+    String PROJECT_ROLE_ID = "project_role_id";
     String EMPTY_STRING = "";
     String PERMISSIONS_FOR_ROLE = "role_permissions";
+
 }

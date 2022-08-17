@@ -23,7 +23,10 @@ public class ProjectInfo {
     @Setter(value = AccessLevel.PRIVATE)
     private long id;
 
+    @Column(name = "user_id")
+    private int userId;
 
+    @JsonProperty(value = "project")
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private Project project;
 

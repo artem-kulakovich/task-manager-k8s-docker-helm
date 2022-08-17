@@ -7,7 +7,6 @@ CREATE TABLE public."user"
     password        character varying(512) NOT NULL,
     email           character varying(512) NOT NULL,
     role_id         integer,
-    project_role_id integer,
     PRIMARY KEY (id),
     UNIQUE (user_name),
     UNIQUE (email)
@@ -48,4 +47,12 @@ CREATE TABLE public."project_role_permissions"
     project_role_id integer,
     permission_id   integer
 );
+
+CREATE TABLE public."user_project_roles"
+(
+    project_role_id integer,
+    user_id         integer
+);
+
+
 

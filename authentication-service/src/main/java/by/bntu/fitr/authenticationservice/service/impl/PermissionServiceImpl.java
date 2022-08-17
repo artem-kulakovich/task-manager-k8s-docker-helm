@@ -8,13 +8,15 @@ import by.bntu.fitr.authenticationservice.service.PermissionService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class PermissionServiceImpl implements PermissionService {
     @Override
-    public List<String> getRolePermissionsName(Role role) {
+    public List<String> getRolePermissionsName(final Role role) {
         if (role == null) {
             return Collections.emptyList();
         }
@@ -26,14 +28,17 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public List<String> getProjectRolePermissionsName(ProjectRole projectRole) {
-        if (projectRole == null) {
-            return Collections.emptyList();
+    public Map<String, List<String>> getProjectRolePermissionsName(List<ProjectRole> projectRoleList) {
+        if (projectRoleList == null) {
+            return Collections.emptyMap();
         }
 
-        List<Permission> permissionList = projectRole.getProjectRolePermissionList();
-        return permissionList == null ? Collections.emptyList()
-                : projectRole.getProjectRolePermissionList().stream().map(Permission::getName)
-                .collect(Collectors.toList());
+        Map<String, List<String>> projectRolePermissions = new HashMap<>();
+
+        for (ProjectRole projectRole : projectRoleList) {
+            projectRolePermissions.put(projectRole.getName(),
+                    projectRole.getProjectRolePermissionList().stream().map(Permission::getName).collect(Collectors.toList()));
+        }
+        return projectRolePermissions;
     }
 }

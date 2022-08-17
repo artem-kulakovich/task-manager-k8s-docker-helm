@@ -37,7 +37,14 @@ public class JWTTokenFilter extends OncePerRequestFilter {
 
         if (jwtTokenProvider.validateToken(token)) {
             jwtContext.setToken(token);
+            jwtContext.setUserName(jwtTokenProvider.getUsername(token));
             jwtContext.setUserId(jwtTokenProvider.getUserId(token));
+            jwtContext.setEmail(jwtTokenProvider.getEmail(token));
+            jwtContext.setRoleName(jwtTokenProvider.getRoleName(token));
+            jwtContext.setProjectRoleName(jwtTokenProvider.getProjectRoleName(token));
+            jwtContext.setRolePermissionsName(jwtTokenProvider.getRolePermissionsName(token));
+            jwtContext.setProjectRolePermissionsName(jwtTokenProvider.getProjectRolePermissionsName(token));
+            jwtContext.setIssuer(jwtTokenProvider.getIssuer(token));
             filterChain.doFilter(request, response);
         } else {
             throw new JWTAuthenticationException("");
