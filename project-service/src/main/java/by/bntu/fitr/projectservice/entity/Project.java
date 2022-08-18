@@ -31,6 +31,8 @@ public class Project {
     @Column(name = "description")
     private String description;
 
+    @JsonIgnore
+    @JsonProperty(value = "projectInfoList")
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER, mappedBy = "project")
     private List<ProjectInfo> projectInfoList;
 

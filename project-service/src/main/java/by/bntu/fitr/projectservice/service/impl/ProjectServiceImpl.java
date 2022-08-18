@@ -1,7 +1,11 @@
 package by.bntu.fitr.projectservice.service.impl;
 
+import by.bntu.fitr.projectservice.dto.response.ProjectResponseDTO;
 import by.bntu.fitr.projectservice.entity.Project;
+import by.bntu.fitr.projectservice.entity.ProjectInfo;
+import by.bntu.fitr.projectservice.exception.ProjectInfoNofFoundException;
 import by.bntu.fitr.projectservice.jwt.JWTContext;
+import by.bntu.fitr.projectservice.mapper.ProjectMapper;
 import by.bntu.fitr.projectservice.repository.ProjectRepository;
 import by.bntu.fitr.projectservice.service.ProjectInfoService;
 import by.bntu.fitr.projectservice.service.ProjectService;
@@ -16,15 +20,15 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final JWTContext jwtContext;
 
-    private final ProjectInfoService projectInfoService;
+    private final ProjectMapper projectMapper;
 
     @Autowired
     public ProjectServiceImpl(ProjectRepository projectRepository,
                               JWTContext jwtContext,
-                              ProjectInfoService projectInfoService) {
+                              ProjectMapper projectMapper) {
         this.projectRepository = projectRepository;
         this.jwtContext = jwtContext;
-        this.projectInfoService = projectInfoService;
+        this.projectMapper = projectMapper;
     }
 
     @Override
@@ -36,6 +40,16 @@ public class ProjectServiceImpl implements ProjectService {
 
 
          */
+        return null;
+    }
+
+    @Override
+    public List<ProjectResponseDTO> getProjectsByUser() {
+        return projectMapper.toProjectResponseDTOList(projectRepository.findProjectByUserId(jwtContext.getUserId()));
+    }
+
+    @Override
+    public Project createProject() {
         return null;
     }
 }

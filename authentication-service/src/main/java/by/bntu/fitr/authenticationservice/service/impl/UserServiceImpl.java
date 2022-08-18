@@ -1,11 +1,8 @@
 package by.bntu.fitr.authenticationservice.service.impl;
 
-import by.bntu.fitr.authenticationservice.constant.CommonConstant;
 import by.bntu.fitr.authenticationservice.constant.ErrorMessageConstant;
-import by.bntu.fitr.authenticationservice.dto.UserCreateDTO;
-import by.bntu.fitr.authenticationservice.dto.UserLoginDTO;
-import by.bntu.fitr.authenticationservice.entity.Permission;
-import by.bntu.fitr.authenticationservice.entity.ProjectRole;
+import by.bntu.fitr.authenticationservice.dto.request.UserCreateRequestDTO;
+import by.bntu.fitr.authenticationservice.dto.request.UserLoginRequestDTO;
 import by.bntu.fitr.authenticationservice.entity.Role;
 import by.bntu.fitr.authenticationservice.entity.User;
 import by.bntu.fitr.authenticationservice.exception.LoginException;
@@ -24,9 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -66,16 +61,16 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User registerUser(final UserCreateDTO userCreateDTO) {
-        if (!userCreateDTO.getPassword().equals(userCreateDTO.getRepeatPassword())) {
+    public User registerUser(final UserCreateRequestDTO userCreateRequestDTO) {
+        if (!userCreateRequestDTO.getPassword().equals(userCreateRequestDTO.getRepeatPassword())) {
             throw new PasswordMismatchException(ErrorMessageConstant.PASSWORD_MISMATCH_EXCEPTION_MSG);
         }
 
-        if (isUserExists(userCreateDTO.getUserName())) {
+        if (isUserExists(userCreateRequestDTO.getUserName())) {
             throw new UserAlreadyExistsException(ErrorMessageConstant.USER_ALREADY_EXIST_EXCEPTION_MSG);
         }
 
-        User user = userMapper.toUser(userCreateDTO);
+        User user = userMapper.toUser(userCreateRequestDTO);
         user.setPassword(jwtUtil.encodeWithMD5(user.getPassword()));
 
         return userRepository.save(user);
@@ -87,10 +82,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String login(final UserLoginDTO userLoginDTO) {
+    public String login(final UserLoginRequestDTO userLoginRequestDTO) {
         try {
-            User user = getUserByUserName(userLoginDTO.getUserName());
-            Role role = user.getRole();
+            User user = getUserByUserName(userLoginRequestDTO.getUserName());
             return jwtTokenProvider.createToken(user.getId(),
                     user.getUserName(),
                     user.getEmail(),

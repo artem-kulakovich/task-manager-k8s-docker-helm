@@ -1,4 +1,4 @@
-package by.bntu.fitr.authenticationservice.dto;
+package by.bntu.fitr.authenticationservice.dto.request;
 
 import by.bntu.fitr.authenticationservice.constant.ValidationConstant;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class UserCreateDTO {
+public class UserCreateRequestDTO {
     @JsonProperty(value = "userName")
     @Size(
             min = ValidationConstant.Constraint.USER_NAME_MIN_CONSTRAINT,

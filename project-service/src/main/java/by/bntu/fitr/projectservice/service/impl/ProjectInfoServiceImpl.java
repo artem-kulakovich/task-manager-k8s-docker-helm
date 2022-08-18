@@ -17,7 +17,7 @@ public class ProjectInfoServiceImpl implements ProjectInfoService {
     }
 
     @Override
-    public List<ProjectInfo> getProjectById(long id) {
+    public List<ProjectInfo> getProjectByUserId(long id) {
         return projectInfoRepository.findByUserId(id);
     }
 }

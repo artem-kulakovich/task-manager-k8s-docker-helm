@@ -18,16 +18,17 @@ import javax.persistence.*;
 public class ProjectInfo {
     @JsonProperty(value = "id")
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_seq")
-    @SequenceGenerator(name = "project_seq", sequenceName = "project_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_info_seq")
+    @SequenceGenerator(name = "project_info_seq", sequenceName = "project_info_id_seq", allocationSize = 1)
     @Setter(value = AccessLevel.PRIVATE)
     private long id;
 
     @Column(name = "user_id")
-    private int userId;
+    private long userId;
 
     @JsonProperty(value = "project")
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_code_id")
     private Project project;
 
 }

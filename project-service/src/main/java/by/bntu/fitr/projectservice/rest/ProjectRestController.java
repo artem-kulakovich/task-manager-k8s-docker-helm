@@ -1,5 +1,6 @@
 package by.bntu.fitr.projectservice.rest;
 
+import by.bntu.fitr.projectservice.dto.response.ProjectResponseDTO;
 import by.bntu.fitr.projectservice.entity.Project;
 import by.bntu.fitr.projectservice.jwt.JWTContext;
 import by.bntu.fitr.projectservice.jwt.JWTTokenProvider;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/projects")
@@ -30,5 +33,9 @@ public class ProjectRestController {
         return new ResponseEntity<>(projectService.getProjectById(id), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/by-user")
+    public ResponseEntity<List<ProjectResponseDTO>> getProjectsByUser() {
+        return new ResponseEntity<>(projectService.getProjectsByUser(), HttpStatus.OK);
+    }
 
 }
