@@ -10,4 +10,6 @@ import java.util.List;
 public interface ProjectInfoService {
 
     List<ProjectInfo> getProjectByUserId(long id);
+
+    ProjectInfo createProjectInfo(ProjectInfo projectInfo);
 }

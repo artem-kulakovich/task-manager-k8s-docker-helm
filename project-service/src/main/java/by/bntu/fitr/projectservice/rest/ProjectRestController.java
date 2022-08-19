@@ -1,17 +1,16 @@
 package by.bntu.fitr.projectservice.rest;
 
+import by.bntu.fitr.projectservice.dto.request.ProjectCreateRequestDTO;
 import by.bntu.fitr.projectservice.dto.response.ProjectResponseDTO;
 import by.bntu.fitr.projectservice.entity.Project;
 import by.bntu.fitr.projectservice.jwt.JWTContext;
 import by.bntu.fitr.projectservice.jwt.JWTTokenProvider;
+import by.bntu.fitr.projectservice.mapper.ProjectMapper;
 import by.bntu.fitr.projectservice.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,13 +18,13 @@ import java.util.List;
 @RequestMapping(value = "/api/v1/projects")
 public class ProjectRestController {
     private final ProjectService projectService;
-    private final JWTContext jwtContext;
+    private final ProjectMapper projectMapper;
 
     @Autowired
     public ProjectRestController(ProjectService projectService,
-                                 JWTContext jwtContext) {
+                                 ProjectMapper projectMapper) {
         this.projectService = projectService;
-        this.jwtContext = jwtContext;
+        this.projectMapper = projectMapper;
     }
 
     @GetMapping(value = "/{id}")
@@ -36,6 +35,13 @@ public class ProjectRestController {
     @GetMapping(value = "/by-user")
     public ResponseEntity<List<ProjectResponseDTO>> getProjectsByUser() {
         return new ResponseEntity<>(projectService.getProjectsByUser(), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/")
+    public ResponseEntity<ProjectResponseDTO> creatProject(@RequestBody ProjectCreateRequestDTO projectCreateRequestDTO) {
+        Project project = projectService.createProject(projectCreateRequestDTO);
+        return new ResponseEntity<>(projectMapper
+                .toProjectResponseDTO(project), HttpStatus.OK);
     }
 
 }

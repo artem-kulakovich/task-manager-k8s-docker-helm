@@ -1,14 +1,9 @@
-package by.bntu.fitr.authenticationservice.mapper;
+package by.bntu.fitr.projectservice.mapper;
 
-import by.bntu.fitr.authenticationservice.dto.response.RoleResponseDTO;
-import by.bntu.fitr.authenticationservice.entity.Permission;
-import by.bntu.fitr.authenticationservice.entity.Role;
+import by.bntu.fitr.projectservice.dto.response.RoleResponseDTO;
+import by.bntu.fitr.projectservice.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Collections;
-import java.util.List;
-
 
 @Component
 public class RoleMapper {
@@ -25,7 +20,7 @@ public class RoleMapper {
                 : new RoleResponseDTO(
                 role.getId(),
                 role.getName(),
-                permissionMapper.toPermissionResponseDTOList(role.getRolePermissionList())
+                permissionMapper.toPermissionResponseDTO(role.getPermissionList())
         );
     }
 }

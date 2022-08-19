@@ -3,7 +3,7 @@ package by.bntu.fitr.authenticationservice.service.impl;
 import by.bntu.fitr.authenticationservice.constant.ErrorMessageConstant;
 import by.bntu.fitr.authenticationservice.dto.request.UserCreateRequestDTO;
 import by.bntu.fitr.authenticationservice.dto.request.UserLoginRequestDTO;
-import by.bntu.fitr.authenticationservice.entity.Role;
+import by.bntu.fitr.authenticationservice.dto.response.UserResponseDTO;
 import by.bntu.fitr.authenticationservice.entity.User;
 import by.bntu.fitr.authenticationservice.exception.LoginException;
 import by.bntu.fitr.authenticationservice.exception.PasswordMismatchException;
@@ -14,7 +14,6 @@ import by.bntu.fitr.authenticationservice.mapper.UserMapper;
 import by.bntu.fitr.authenticationservice.repository.UserRepository;
 import by.bntu.fitr.authenticationservice.jwt.JWTTokenProvider;
 import by.bntu.fitr.authenticationservice.service.PermissionService;
-import by.bntu.fitr.authenticationservice.service.ProjectRoleService;
 import by.bntu.fitr.authenticationservice.service.RoleService;
 import by.bntu.fitr.authenticationservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,22 +32,18 @@ public class UserServiceImpl implements UserService {
 
     private final RoleService roleService;
 
-    private final ProjectRoleService projectRoleService;
-
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            JWTUtil jwtUtil,
                            PermissionService permissionService,
                            UserMapper userMapper,
                            JWTTokenProvider jwtTokenProvider,
-                           RoleService roleService,
-                           ProjectRoleService projectRoleService) {
+                           RoleService roleService) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
         this.permissionService = permissionService;
         this.userMapper = userMapper;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.projectRoleService = projectRoleService;
         this.roleService = roleService;
     }
 
@@ -61,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User registerUser(final UserCreateRequestDTO userCreateRequestDTO) {
+    public UserResponseDTO registerUser(final UserCreateRequestDTO userCreateRequestDTO) {
         if (!userCreateRequestDTO.getPassword().equals(userCreateRequestDTO.getRepeatPassword())) {
             throw new PasswordMismatchException(ErrorMessageConstant.PASSWORD_MISMATCH_EXCEPTION_MSG);
         }
@@ -73,7 +68,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toUser(userCreateRequestDTO);
         user.setPassword(jwtUtil.encodeWithMD5(user.getPassword()));
 
-        return userRepository.save(user);
+        return userMapper.toUserResponseDTO(userRepository.save(user));
     }
 
     @Override
@@ -89,10 +84,7 @@ public class UserServiceImpl implements UserService {
                     user.getUserName(),
                     user.getEmail(),
                     roleService.getRoleName(user.getRole()),
-                    projectRoleService.getProjectRoleNames(user.getProjectRole()),
-                    permissionService.getRolePermissionsName(user.getRole()),
-                    permissionService.getProjectRolePermissionsName(user.getProjectRole())
-
+                    permissionService.getRolePermissionsName(user.getRole())
             );
         } catch (UserNotFoundException e) {
             throw new LoginException(ErrorMessageConstant.CANT_LOGIN_EXCEPTION_MSG);

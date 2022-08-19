@@ -36,4 +36,8 @@ public class Project {
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER, mappedBy = "project")
     private List<ProjectInfo> projectInfoList;
 
+    public Project(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

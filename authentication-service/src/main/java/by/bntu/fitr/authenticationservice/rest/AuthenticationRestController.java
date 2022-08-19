@@ -2,6 +2,7 @@ package by.bntu.fitr.authenticationservice.rest;
 
 import by.bntu.fitr.authenticationservice.dto.request.UserCreateRequestDTO;
 import by.bntu.fitr.authenticationservice.dto.request.UserLoginRequestDTO;
+import by.bntu.fitr.authenticationservice.dto.response.UserResponseDTO;
 import by.bntu.fitr.authenticationservice.entity.User;
 import by.bntu.fitr.authenticationservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class AuthenticationRestController {
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<User> register(@RequestBody @Valid UserCreateRequestDTO userCreateRequestDTO) {
+    public ResponseEntity<UserResponseDTO> register(@RequestBody @Valid UserCreateRequestDTO userCreateRequestDTO) {
         return new ResponseEntity<>(userService.registerUser(userCreateRequestDTO), HttpStatus.OK);
     }
 }

@@ -28,9 +28,6 @@ public class UserResponseDTO {
     @JsonProperty(value = "email")
     private String email;
 
-    @JsonProperty(value = "projectRole")
-    private List<ProjectRoleResponseDTO> projectRoleResponseDTO;
-
     @JsonProperty(value = "role")
     private RoleResponseDTO roleResponseDTO;
 

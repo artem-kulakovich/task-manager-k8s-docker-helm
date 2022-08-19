@@ -1,8 +1,6 @@
 package by.bntu.fitr.authenticationservice.service.impl;
 
-import by.bntu.fitr.authenticationservice.constant.CommonConstant;
 import by.bntu.fitr.authenticationservice.entity.Permission;
-import by.bntu.fitr.authenticationservice.entity.ProjectRole;
 import by.bntu.fitr.authenticationservice.entity.Role;
 import by.bntu.fitr.authenticationservice.service.PermissionService;
 import org.springframework.stereotype.Service;
@@ -27,18 +25,4 @@ public class PermissionServiceImpl implements PermissionService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public Map<String, List<String>> getProjectRolePermissionsName(List<ProjectRole> projectRoleList) {
-        if (projectRoleList == null) {
-            return Collections.emptyMap();
-        }
-
-        Map<String, List<String>> projectRolePermissions = new HashMap<>();
-
-        for (ProjectRole projectRole : projectRoleList) {
-            projectRolePermissions.put(projectRole.getName(),
-                    projectRole.getProjectRolePermissionList().stream().map(Permission::getName).collect(Collectors.toList()));
-        }
-        return projectRolePermissions;
-    }
 }

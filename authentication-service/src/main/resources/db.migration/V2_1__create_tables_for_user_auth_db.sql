@@ -20,13 +20,6 @@ CREATE TABLE public."role"
     UNIQUE (name)
 );
 
-CREATE TABLE public."project_role"
-(
-    id   bigserial              NOT NULL,
-    name character varying(100) NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE (name)
-);
 
 CREATE TABLE public."permission"
 (
@@ -42,17 +35,6 @@ CREATE TABLE public."role_permissions"
     permission_id integer
 );
 
-CREATE TABLE public."project_role_permissions"
-(
-    project_role_id integer,
-    permission_id   integer
-);
-
-CREATE TABLE public."user_project_roles"
-(
-    project_role_id integer,
-    user_id         integer
-);
 
 
 

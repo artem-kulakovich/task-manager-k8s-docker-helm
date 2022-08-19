@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 
@@ -26,9 +28,18 @@ public class ProjectInfo {
     @Column(name = "user_id")
     private long userId;
 
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    private Role role;
+
     @JsonProperty(value = "project")
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinColumn(name = "project_code_id")
     private Project project;
 
+    public ProjectInfo(long userId, Role role, Project project) {
+        this.userId = userId;
+        this.role = role;
+        this.project = project;
+    }
 }

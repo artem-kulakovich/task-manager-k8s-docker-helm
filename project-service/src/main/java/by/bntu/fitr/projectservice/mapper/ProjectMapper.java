@@ -1,5 +1,6 @@
 package by.bntu.fitr.projectservice.mapper;
 
+import by.bntu.fitr.projectservice.dto.request.ProjectCreateRequestDTO;
 import by.bntu.fitr.projectservice.dto.response.ProjectInfoResponseDTO;
 import by.bntu.fitr.projectservice.dto.response.ProjectResponseDTO;
 import by.bntu.fitr.projectservice.entity.Project;

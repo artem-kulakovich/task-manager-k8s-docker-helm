@@ -1,6 +1,5 @@
-package by.bntu.fitr.authenticationservice.dto.response;
+package by.bntu.fitr.projectservice.dto.response;
 
-import by.bntu.fitr.authenticationservice.entity.Permission;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,13 +12,13 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ProjectRoleResponseDTO {
+public class RoleResponseDTO {
     @JsonProperty(value = "id")
     private long id;
 
     @JsonProperty(value = "name")
     private String name;
 
-    @JsonProperty(value = "projectRolePermissions")
-    private List<Permission> permissionList;
+    @JsonProperty(value = "permissions")
+    private List<PermissionResponseDTO> permissionResponseDTOList;
 }

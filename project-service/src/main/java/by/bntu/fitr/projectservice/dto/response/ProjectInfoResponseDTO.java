@@ -16,4 +16,7 @@ public class ProjectInfoResponseDTO {
 
     @JsonProperty(value = "userId")
     private long userId;
+
+    @JsonProperty(value = "role")
+    private RoleResponseDTO roleResponseDTO;
 }

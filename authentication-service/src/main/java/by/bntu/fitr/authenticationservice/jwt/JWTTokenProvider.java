@@ -1,10 +1,6 @@
 package by.bntu.fitr.authenticationservice.jwt;
 
 import by.bntu.fitr.authenticationservice.constant.CommonConstant;
-import by.bntu.fitr.authenticationservice.entity.Permission;
-import by.bntu.fitr.authenticationservice.entity.ProjectRole;
-import by.bntu.fitr.authenticationservice.entity.Role;
-import by.bntu.fitr.authenticationservice.entity.User;
 import io.jsonwebtoken.*;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,15 +30,13 @@ public class JWTTokenProvider {
     }
 
     public String createToken(long userId, String userName, String email,
-                              String roleName, List<String> projectRoleName,
-                              List<String> rolePermissionsName, Map<String, List<String>> projectRolePermissionsName) {
+                              String roleName,
+                              List<String> rolePermissionsName) {
         Claims claims = Jwts.claims().setSubject(userName);
         claims.put(CommonConstant.EMAIL, email);
         claims.put(CommonConstant.USER_ID, userId);
         claims.put(CommonConstant.ROLE_NAME, roleName);
-        claims.put(CommonConstant.PROJECT_ROLE_NAME, projectRoleName);
         claims.put(CommonConstant.PERMISSIONS_FOR_ROLE, rolePermissionsName);
-        claims.put(CommonConstant.PERMISSIONS_FOR_PROJECT_ROLE, projectRolePermissionsName);
 
         Date currentDate = new Date();
         Date expiredDate = new Date(currentDate.getTime() + validityInMilliseconds);

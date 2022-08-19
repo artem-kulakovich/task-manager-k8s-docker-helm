@@ -5,9 +5,11 @@ import by.bntu.fitr.projectservice.entity.ProjectInfo;
 import by.bntu.fitr.projectservice.repository.ProjectInfoRepository;
 import by.bntu.fitr.projectservice.service.ProjectInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ProjectInfoServiceImpl implements ProjectInfoService {
     private ProjectInfoRepository projectInfoRepository;
 
@@ -19,5 +21,10 @@ public class ProjectInfoServiceImpl implements ProjectInfoService {
     @Override
     public List<ProjectInfo> getProjectByUserId(long id) {
         return projectInfoRepository.findByUserId(id);
+    }
+
+    @Override
+    public ProjectInfo createProjectInfo(ProjectInfo projectInfo) {
+        return projectInfoRepository.save(projectInfo);
     }
 }

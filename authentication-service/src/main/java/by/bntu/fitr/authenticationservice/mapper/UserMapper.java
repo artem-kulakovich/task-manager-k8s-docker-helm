@@ -1,6 +1,8 @@
 package by.bntu.fitr.authenticationservice.mapper;
 
 import by.bntu.fitr.authenticationservice.dto.request.UserCreateRequestDTO;
+import by.bntu.fitr.authenticationservice.dto.response.UserResponseDTO;
+import by.bntu.fitr.authenticationservice.entity.Role;
 import by.bntu.fitr.authenticationservice.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,4 +26,16 @@ public class UserMapper {
                 userCreateRequestDTO.getEmail()
         );
     }
+
+    public UserResponseDTO toUserResponseDTO(final User user) {
+        return new UserResponseDTO(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getUserName(),
+                user.getEmail(),
+                roleMapper.toRoleResponseDTO(user.getRole())
+        );
+    }
+
 }
