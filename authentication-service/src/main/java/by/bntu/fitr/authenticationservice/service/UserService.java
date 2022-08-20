@@ -8,14 +8,14 @@ import by.bntu.fitr.authenticationservice.entity.User;
 import java.util.List;
 
 public interface UserService {
-    User getUserByUserName(String userName);
+    User getUserByUserName(final String userName);
 
-    UserResponseDTO registerUser(UserCreateRequestDTO userCreateRequestDTO);
+    User registerUser(final UserCreateRequestDTO userCreateRequestDTO);
 
-    List<User> getAllUsers();
+    String login(final UserLoginRequestDTO userLoginRequestDTO);
 
-    String login(UserLoginRequestDTO userLoginRequestDTO);
+    boolean isUserExists(final String userName);
 
-    boolean isUserExists(String userName);
+    User getUserById(Long id);
 
 }

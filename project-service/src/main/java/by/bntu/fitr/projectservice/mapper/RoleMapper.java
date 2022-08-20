@@ -5,6 +5,9 @@ import by.bntu.fitr.projectservice.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class RoleMapper {
     private final PermissionMapper permissionMapper;
@@ -20,7 +23,16 @@ public class RoleMapper {
                 : new RoleResponseDTO(
                 role.getId(),
                 role.getName(),
-                permissionMapper.toPermissionResponseDTO(role.getPermissionList())
+                role.getCreateAt(),
+                permissionMapper.toPermissionResponseDTOList(role.getPermissionList())
         );
+    }
+
+    public List<RoleResponseDTO> toRoleResponseDTOList(List<Role> roleList) {
+        return roleList == null
+                ? null
+                : roleList.stream().map(this::toRoleResponseDTO)
+                .collect(Collectors.toList());
+
     }
 }

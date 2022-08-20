@@ -23,23 +23,27 @@ public class ProjectInfo {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_info_seq")
     @SequenceGenerator(name = "project_info_seq", sequenceName = "project_info_id_seq", allocationSize = 1)
     @Setter(value = AccessLevel.PRIVATE)
-    private long id;
+    private Long id;
 
     @Column(name = "user_id")
-    private long userId;
+    private Long userId;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @JsonProperty(value = "project")
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinColumn(name = "project_code_id")
     private Project project;
 
-    public ProjectInfo(long userId, Role role, Project project) {
+    public ProjectInfo(Long userId, Role role, Project project) {
         this.userId = userId;
         this.role = role;
         this.project = project;
+    }
+
+    public ProjectInfo(Long userId, Role role) {
+        this.userId = userId;
+        this.role = role;
     }
 }

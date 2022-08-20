@@ -13,7 +13,7 @@ public class UserMapper {
     private final RoleMapper roleMapper;
 
     @Autowired
-    public UserMapper(RoleMapper roleMapper) {
+    public UserMapper(final RoleMapper roleMapper) {
         this.roleMapper = roleMapper;
     }
 

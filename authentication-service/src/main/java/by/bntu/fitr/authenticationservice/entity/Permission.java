@@ -20,7 +20,7 @@ public class Permission {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "permission_seq")
     @SequenceGenerator(name = "permission_seq", sequenceName = "permission_id_seq", allocationSize = 1)
     @Setter(value = AccessLevel.PRIVATE)
-    private long id;
+    private Long id;
 
     @JsonProperty(value = "name")
     @Column(name = "name", nullable = false, unique = true)

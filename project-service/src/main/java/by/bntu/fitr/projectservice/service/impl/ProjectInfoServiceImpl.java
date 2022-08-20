@@ -18,10 +18,6 @@ public class ProjectInfoServiceImpl implements ProjectInfoService {
         this.projectInfoRepository = projectInfoRepository;
     }
 
-    @Override
-    public List<ProjectInfo> getProjectByUserId(long id) {
-        return projectInfoRepository.findByUserId(id);
-    }
 
     @Override
     public ProjectInfo createProjectInfo(ProjectInfo projectInfo) {

@@ -23,7 +23,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
     @SequenceGenerator(name = "role_seq", sequenceName = "role_id_seq", allocationSize = 1)
     @Setter(value = AccessLevel.PRIVATE)
-    private long id;
+    private Long id;
 
     @JsonProperty(value = "name")
     @Column(name = "name", nullable = false, unique = true)

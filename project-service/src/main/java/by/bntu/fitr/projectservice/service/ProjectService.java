@@ -8,11 +8,15 @@ import java.util.List;
 
 public interface ProjectService {
 
-    Project getProjectById(long id);
-
-    List<ProjectResponseDTO> getProjectsByUser();
+    List<Project> getProjectsByUser();
 
     Project createProject(ProjectCreateRequestDTO projectCreateRequestDTO);
 
+    List<Project> getProjectsByName(String name);
+
     boolean isProjectExists(String name);
+
+    Project getProjectById(Long id);
+
+    void assignToProjects();
 }

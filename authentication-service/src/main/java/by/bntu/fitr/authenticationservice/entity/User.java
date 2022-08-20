@@ -20,7 +20,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     @SequenceGenerator(name = "user_seq", sequenceName = "user_id_seq", allocationSize = 1)
     @Setter(value = AccessLevel.PRIVATE)
-    private long id;
+    private Long id;
 
     @JsonProperty(value = "firstName")
     @Column(name = "first_name")

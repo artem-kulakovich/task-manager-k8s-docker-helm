@@ -17,11 +17,20 @@ public class ProjectInfoMapper {
         this.roleMapper = roleMapper;
     }
 
-    public List<ProjectInfoResponseDTO> toProjectInfosResponseDTO(List<ProjectInfo> projectInfos) {
-        return projectInfos.stream().map(projectInfo -> new ProjectInfoResponseDTO(
+    public List<ProjectInfoResponseDTO> toProjectInfoResponseDTOList(List<ProjectInfo> projectInfos) {
+        return projectInfos == null
+                ? null
+                : projectInfos.stream().map(this::toProjectInfoResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    public ProjectInfoResponseDTO toProjectInfoResponseDTO(ProjectInfo projectInfo) {
+        return projectInfo == null
+                ? null
+                : new ProjectInfoResponseDTO(
                 projectInfo.getId(),
                 projectInfo.getUserId(),
                 roleMapper.toRoleResponseDTO(projectInfo.getRole())
-        )).collect(Collectors.toList());
+        );
     }
 }

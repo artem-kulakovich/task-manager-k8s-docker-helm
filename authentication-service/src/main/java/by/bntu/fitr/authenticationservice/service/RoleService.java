@@ -4,7 +4,7 @@ import by.bntu.fitr.authenticationservice.entity.Role;
 
 public interface RoleService {
 
-    Role getRoleByName(String name);
+    Role getRoleByName(final String name);
 
-    String getRoleName(Role role);
+    String getRoleName(final Role role);
 }

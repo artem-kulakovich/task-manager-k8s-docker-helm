@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -16,16 +17,17 @@ import java.util.List;
 @Entity
 @Table(name = "\"permission\"")
 public class Permission {
-    @JsonProperty(value = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
     @SequenceGenerator(name = "role_seq", sequenceName = "role_id_seq", allocationSize = 1)
     @Setter(value = AccessLevel.PRIVATE)
-    private long id;
+    private Long id;
 
-    @JsonProperty(value = "name")
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
+    @Column(name = "createAt")
+    private Date createAt;
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER, mappedBy = "permissionList")
     private List<Role> roleList;
 
@@ -45,5 +47,10 @@ public class Permission {
             roleList = new ArrayList<>();
         }
         roleList.addAll(roles);
+    }
+
+    @PrePersist
+    public void createDate() {
+        createAt = new Date();
     }
 }

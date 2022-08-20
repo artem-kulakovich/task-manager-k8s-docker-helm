@@ -1,29 +1,32 @@
 package by.bntu.fitr.authenticationservice.rest;
 
-import by.bntu.fitr.authenticationservice.entity.User;
+import by.bntu.fitr.authenticationservice.dto.response.UserResponseDTO;
+import by.bntu.fitr.authenticationservice.mapper.UserMapper;
 import by.bntu.fitr.authenticationservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/authentication-service/users")
 public class UserRestController {
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserRestController(UserService userService) {
+    public UserRestController(final UserService userService, final UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<User>> getAllUsers() {
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable("id") final Long id) {
+        return new ResponseEntity<>(userMapper.toUserResponseDTO(userService.getUserById(id)), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/find-by-username")
+    public ResponseEntity<UserResponseDTO> getUserByUsername(@RequestParam("userName") final String userName) {
+        return new ResponseEntity<>(userMapper.toUserResponseDTO(userService.getUserByUserName(userName)), HttpStatus.OK);
+    }
 }

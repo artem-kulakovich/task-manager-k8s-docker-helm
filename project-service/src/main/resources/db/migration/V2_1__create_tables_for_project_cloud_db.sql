@@ -1,8 +1,20 @@
+CREATE TABLE public."workspace"
+(
+    id        bigserial              NOT NULL,
+    name      character varying(100) NOT NULL,
+    create_at timestamp with time zone,
+    user_id   integer,
+    PRIMARY KEY (id),
+    UNIQUE (name, user_id)
+);
+
 CREATE TABLE public."project"
 (
-    id          bigserial              NOT NULL,
-    name        character varying(100) NOT NULL,
-    description character varying(1024),
+    id           bigserial              NOT NULL,
+    name         character varying(100) NOT NULL,
+    description  character varying(1024),
+    create_at    timestamp with time zone,
+    workspace_id integer,
     PRIMARY KEY (id),
     UNIQUE (name)
 );
@@ -18,16 +30,19 @@ CREATE TABLE public."project_info"
 
 CREATE TABLE public."role"
 (
-    id   bigserial              NOT NULL,
-    name character varying(100) NOT NULL,
+    id         bigserial              NOT NULL,
+    name       character varying(100) NOT NULL,
+    create_at  timestamp with time zone,
+    project_id integer,
     PRIMARY KEY (id),
-    UNIQUE (name)
+    UNIQUE (name, project_id)
 );
 
 CREATE TABLE public."permission"
 (
-    id   bigserial              NOT NULL,
-    name character varying(100) NOT NULL,
+    id        bigserial              NOT NULL,
+    name      character varying(100) NOT NULL,
+    create_at timestamp with time zone,
     PRIMARY KEY (id),
     UNIQUE (name)
 );

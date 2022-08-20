@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class PermissionResponseDTO {
     @JsonProperty(value = "id")
-    private long id;
+    private Long id;
 
     @JsonProperty(value = "name")
     private String name;

@@ -7,14 +7,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 public class PermissionResponseDTO {
     @JsonProperty(value = "id")
-    private long id;
+    private Long id;
 
     @JsonProperty(value = "name")
     private String name;
+
+    @JsonProperty(value = "createAt")
+    private Date createAt;
 }

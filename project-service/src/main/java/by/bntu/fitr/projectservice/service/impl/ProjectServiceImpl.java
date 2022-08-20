@@ -1,25 +1,25 @@
 package by.bntu.fitr.projectservice.service.impl;
 
+import by.bntu.fitr.projectservice.constant.CommonConstant;
+import by.bntu.fitr.projectservice.constant.PermissionConstant;
 import by.bntu.fitr.projectservice.constant.RoleConstant;
 import by.bntu.fitr.projectservice.dto.request.ProjectCreateRequestDTO;
 import by.bntu.fitr.projectservice.dto.response.ProjectResponseDTO;
-import by.bntu.fitr.projectservice.entity.Project;
-import by.bntu.fitr.projectservice.entity.ProjectInfo;
-import by.bntu.fitr.projectservice.entity.Role;
+import by.bntu.fitr.projectservice.entity.*;
 import by.bntu.fitr.projectservice.exception.ProjectInfoNofFoundException;
+import by.bntu.fitr.projectservice.exception.ProjectNotFoundException;
 import by.bntu.fitr.projectservice.factory.ProjectFactory;
 import by.bntu.fitr.projectservice.factory.ProjectInfoFactory;
+import by.bntu.fitr.projectservice.factory.RoleFactory;
 import by.bntu.fitr.projectservice.jwt.JWTContext;
 import by.bntu.fitr.projectservice.mapper.ProjectMapper;
 import by.bntu.fitr.projectservice.repository.ProjectRepository;
-import by.bntu.fitr.projectservice.service.ProjectInfoService;
-import by.bntu.fitr.projectservice.service.ProjectService;
-import by.bntu.fitr.projectservice.service.RoleService;
+import by.bntu.fitr.projectservice.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,66 +32,83 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectFactory projectFactory;
 
+    private final RoleFactory roleFactory;
+
     private final ProjectInfoFactory projectInfoFactory;
 
     private final ProjectInfoService projectInfoService;
 
     private final RoleService roleService;
 
+    private final WorkspaceService workspaceService;
+
+    private final PermissionService permissionService;
+
     @Autowired
     public ProjectServiceImpl(ProjectRepository projectRepository,
                               JWTContext jwtContext,
                               ProjectMapper projectMapper,
                               ProjectFactory projectFactory,
+                              RoleFactory roleFactory,
                               ProjectInfoFactory projectInfoFactory,
                               ProjectInfoService projectInfoService,
-                              RoleService roleService) {
+                              RoleService roleService,
+                              WorkspaceService workspaceService,
+                              PermissionService permissionService) {
         this.projectRepository = projectRepository;
         this.jwtContext = jwtContext;
         this.projectMapper = projectMapper;
         this.projectFactory = projectFactory;
         this.projectInfoFactory = projectInfoFactory;
+        this.roleFactory = roleFactory;
         this.projectInfoService = projectInfoService;
         this.roleService = roleService;
+        this.workspaceService = workspaceService;
+        this.permissionService = permissionService;
     }
 
     @Override
-    public Project getProjectById(long id) {
-        /*
-        Project result = projects.stream().filter(project -> {
-            return project.getId() == id;
-        }).findFirst().orElseThrow(() -> new RuntimeException(""));
-
-
-         */
-        return null;
+    public List<Project> getProjectsByUser() {
+        return projectRepository.findProjectByUserId(jwtContext.getUserId());
     }
 
-    @Override
-    public List<ProjectResponseDTO> getProjectsByUser() {
-        return projectMapper.toProjectResponseDTOList(projectRepository.findProjectByUserId(jwtContext.getUserId()));
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     @Override
     public Project createProject(ProjectCreateRequestDTO projectCreateRequestDTO) {
         if (isProjectExists(projectCreateRequestDTO.getName())) {
-            throw new RuntimeException("");
+            throw new ProjectInfoNofFoundException(CommonConstant.PROJECT);
         }
         Project project = projectRepository.save(projectFactory.getProject(
                 projectCreateRequestDTO.getName(),
                 projectCreateRequestDTO.getDescription())
         );
 
-        Role role = roleService.getRoleByName(RoleConstant.ROLE_PROJECT_OWNER);
+        Role role = roleService.createRole(RoleConstant.ROLE_PROJECT_OWNER, project);
 
-        projectInfoService.createProjectInfo(projectInfoFactory.getProjectInfo(
+        Permission readPermission = permissionService.getPermissionOrElseNull(PermissionConstant.PERMISSION_READ);
+        Permission writePermission = permissionService.getPermissionOrElseNull(PermissionConstant.PERMISSION_WRITE);
+
+        role.addPermission(readPermission == null
+                ? permissionService.createPermission(PermissionConstant.PERMISSION_READ)
+                : readPermission);
+        role.addPermission(writePermission == null
+                ? permissionService.createPermission(PermissionConstant.PERMISSION_WRITE)
+                : writePermission);
+
+        ProjectInfo projectInfo = projectInfoService.createProjectInfo(projectInfoFactory.getProjectInfo(
                 jwtContext.getUserId(),
                 role,
                 project
         ));
 
+        project.setProjectInfoList(Collections.singletonList(projectInfo));
+        project.setWorkspace(workspaceService.getWorkspaceById(projectCreateRequestDTO.getWorkspaceId()));
         return project;
+    }
+
+    @Override
+    public List<Project> getProjectsByName(String name) {
+        return projectRepository.findProjectByNameLikeIgnoreCase(name);
     }
 
     @Override
@@ -99,5 +116,14 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.findProjectByName(name).isPresent();
     }
 
+    @Override
+    public Project getProjectById(Long id) {
+        return projectRepository.findById(id).orElseThrow(() -> new ProjectNotFoundException(CommonConstant.PROJECT));
+    }
+
+    @Override
+    public void assignToProjects() {
+
+    }
 
 }

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
@@ -19,6 +21,7 @@ public class UserCreateRequestDTO {
             max = ValidationConstant.Constraint.USER_NAME_MAX_CONSTRAINT,
             message = ValidationConstant.ValidationMsg.USER_NAME_VALIDATION_MSG
     )
+    @NotNull
     private String userName;
 
     @JsonProperty(value = "email")
@@ -27,6 +30,7 @@ public class UserCreateRequestDTO {
             max = ValidationConstant.Constraint.EMAIL_MAX_CONSTRAINT,
             message = ValidationConstant.ValidationMsg.EMAIL_VALIDATION_MSG
     )
+    @NotNull
     private String email;
 
     @JsonProperty(value = "lastName")
@@ -35,6 +39,7 @@ public class UserCreateRequestDTO {
             max = ValidationConstant.Constraint.LAST_NAME_MAX_CONSTRAINT,
             message = ValidationConstant.ValidationMsg.LAST_NAME_VALIDATION_MSG
     )
+    @NotNull
     private String lastName;
 
     @JsonProperty(value = "firstName")
@@ -43,6 +48,7 @@ public class UserCreateRequestDTO {
             max = ValidationConstant.Constraint.FIRST_NAME_MAX_CONSTRAINT,
             message = ValidationConstant.ValidationMsg.USER_NAME_VALIDATION_MSG
     )
+    @NotNull
     private String firstName;
 
     @JsonProperty(value = "password")
@@ -51,8 +57,10 @@ public class UserCreateRequestDTO {
             max = ValidationConstant.Constraint.PASSWORD_MAX_CONSTRAINT,
             message = ValidationConstant.ValidationMsg.PASSWORD_VALIDATION_MSG
     )
+    @NotNull
     private String password;
 
     @JsonProperty(value = "repeatPassword")
+    @NotNull
     private String repeatPassword;
 }

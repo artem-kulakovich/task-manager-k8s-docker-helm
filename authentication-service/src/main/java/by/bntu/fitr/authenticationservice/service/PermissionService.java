@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface PermissionService {
 
-    List<String> getRolePermissionsName(Role role);
+    List<String> getRolePermissionsName(final Role role);
 
 }

@@ -10,5 +10,8 @@ public interface CommonConstant {
     String PROJECT_ROLE_ID = "project_role_id";
     String EMPTY_STRING = "";
     String PERMISSIONS_FOR_ROLE = "role_permissions";
+    String PROJECT = "Project";
+    String ROLE = "Role";
+    String WORKSPACE = "Workspace";
 
 }

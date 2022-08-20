@@ -13,12 +13,12 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
 
     @Autowired
-    public RoleServiceImpl(RoleRepository roleRepository) {
+    public RoleServiceImpl(final RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
 
     @Override
-    public Role getRoleByName(String name) {
+    public Role getRoleByName(final String name) {
         return roleRepository.findByName(name).orElseThrow(
                 () -> new RoleNotFoundException("Role")
         );

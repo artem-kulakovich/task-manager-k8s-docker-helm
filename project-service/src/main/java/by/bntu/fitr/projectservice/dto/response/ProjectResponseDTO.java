@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -14,13 +15,16 @@ import java.util.List;
 @Setter
 public class ProjectResponseDTO {
     @JsonProperty(value = "id")
-    private long id;
+    private Long id;
 
     @JsonProperty(value = "name")
     private String name;
 
     @JsonProperty(value = "description")
     private String description;
+
+    @JsonProperty(value = "createAt")
+    private Date createAt;
 
     @JsonProperty(value = "projectInfo")
     private List<ProjectInfoResponseDTO> projectInfoResponseDTOList;

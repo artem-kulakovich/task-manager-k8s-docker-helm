@@ -19,7 +19,7 @@ public class RoleMapper {
         this.permissionMapper = permissionMapper;
     }
 
-    public RoleResponseDTO toRoleResponseDTO(Role role) {
+    public RoleResponseDTO toRoleResponseDTO(final Role role) {
         return role == null
                 ? null
                 : new RoleResponseDTO(

@@ -12,10 +12,10 @@ import lombok.Setter;
 @Setter
 public class ProjectInfoResponseDTO {
     @JsonProperty(value = "id")
-    private long id;
+    private Long id;
 
     @JsonProperty(value = "userId")
-    private long userId;
+    private Long userId;
 
     @JsonProperty(value = "role")
     private RoleResponseDTO roleResponseDTO;

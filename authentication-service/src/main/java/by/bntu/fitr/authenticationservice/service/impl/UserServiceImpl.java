@@ -1,9 +1,9 @@
 package by.bntu.fitr.authenticationservice.service.impl;
 
 import by.bntu.fitr.authenticationservice.constant.ErrorMessageConstant;
+import by.bntu.fitr.authenticationservice.constant.RoleConstant;
 import by.bntu.fitr.authenticationservice.dto.request.UserCreateRequestDTO;
 import by.bntu.fitr.authenticationservice.dto.request.UserLoginRequestDTO;
-import by.bntu.fitr.authenticationservice.dto.response.UserResponseDTO;
 import by.bntu.fitr.authenticationservice.entity.User;
 import by.bntu.fitr.authenticationservice.exception.LoginException;
 import by.bntu.fitr.authenticationservice.exception.PasswordMismatchException;
@@ -18,7 +18,6 @@ import by.bntu.fitr.authenticationservice.service.RoleService;
 import by.bntu.fitr.authenticationservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -48,15 +47,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByUserName(String userName) {
+    public User getUserByUserName(final String userName) {
         return userRepository.findByUserName(userName).orElseThrow(
                 () -> new UserNotFoundException("User")
         );
     }
 
-    @Transactional
     @Override
-    public UserResponseDTO registerUser(final UserCreateRequestDTO userCreateRequestDTO) {
+    public User registerUser(final UserCreateRequestDTO userCreateRequestDTO) {
         if (!userCreateRequestDTO.getPassword().equals(userCreateRequestDTO.getRepeatPassword())) {
             throw new PasswordMismatchException(ErrorMessageConstant.PASSWORD_MISMATCH_EXCEPTION_MSG);
         }
@@ -66,14 +64,10 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userMapper.toUser(userCreateRequestDTO);
+        user.setRole(roleService.getRoleByName(RoleConstant.USER));
         user.setPassword(jwtUtil.encodeWithMD5(user.getPassword()));
 
-        return userMapper.toUserResponseDTO(userRepository.save(user));
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return user;
     }
 
     @Override
@@ -92,7 +86,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isUserExists(String userName) {
+    public boolean isUserExists(final String userName) {
         return userRepository.findByUserName(userName).isPresent();
+    }
+
+    @Override
+    public User getUserById(final Long id) {
+        return userRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundException("User")
+        );
     }
 }

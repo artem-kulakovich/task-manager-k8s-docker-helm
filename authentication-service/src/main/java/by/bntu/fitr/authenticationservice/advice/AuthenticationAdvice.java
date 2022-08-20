@@ -1,10 +1,7 @@
 package by.bntu.fitr.authenticationservice.advice;
 
 
-import by.bntu.fitr.authenticationservice.exception.LoginException;
-import by.bntu.fitr.authenticationservice.exception.NotFoundException;
-import by.bntu.fitr.authenticationservice.exception.RoleNotFoundException;
-import by.bntu.fitr.authenticationservice.exception.UserNotFoundException;
+import by.bntu.fitr.authenticationservice.exception.*;
 import by.bntu.fitr.authenticationservice.model.HttpResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -38,6 +35,18 @@ public class AuthenticationAdvice extends ResponseEntityExceptionHandler {
         }
 
         return new ResponseEntity<>(httpResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PasswordMismatchException.class)
+    public ResponseEntity<HttpResponse> handlePasswordMismatchException(PasswordMismatchException e) {
+        HttpResponse httpResponse = new HttpResponse(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(httpResponse, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<HttpResponse> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
+        HttpResponse httpResponse = new HttpResponse(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(httpResponse, HttpStatus.NOT_ACCEPTABLE);
     }
 
     @Override

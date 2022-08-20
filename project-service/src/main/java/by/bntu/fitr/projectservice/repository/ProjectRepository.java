@@ -13,7 +13,10 @@ import java.util.Set;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query(value = "SELECT p FROM Project p JOIN p.projectInfoList p_info WHERE p_info.userId = :user_id")
-    List<Project> findProjectByUserId(@Param("user_id") long userId);
+    List<Project> findProjectByUserId(@Param("user_id") Long userId);
+
+    @Query(value = "SELECT p FROM Project p  WHERE UPPER(p.name) LIKE CONCAT('%',UPPER(:name),'%')")
+    List<Project> findProjectByNameLikeIgnoreCase(@Param("name") String name);
 
     Optional<Project> findProjectByName(String name);
 }

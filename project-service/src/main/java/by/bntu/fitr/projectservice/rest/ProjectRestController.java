@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/v1/projects")
+@RequestMapping(value = "/api/v1/project-service/projects")
 public class ProjectRestController {
     private final ProjectService projectService;
     private final ProjectMapper projectMapper;
@@ -27,21 +27,21 @@ public class ProjectRestController {
         this.projectMapper = projectMapper;
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Project> getProjectById(@PathVariable("id") long id) {
-        return new ResponseEntity<>(projectService.getProjectById(id), HttpStatus.OK);
-    }
-
     @GetMapping(value = "/by-user")
     public ResponseEntity<List<ProjectResponseDTO>> getProjectsByUser() {
-        return new ResponseEntity<>(projectService.getProjectsByUser(), HttpStatus.OK);
+        return new ResponseEntity<>(projectMapper.toProjectResponseDTOList(projectService.getProjectsByUser()),
+                HttpStatus.OK);
     }
 
     @PostMapping(value = "/")
     public ResponseEntity<ProjectResponseDTO> creatProject(@RequestBody ProjectCreateRequestDTO projectCreateRequestDTO) {
-        Project project = projectService.createProject(projectCreateRequestDTO);
         return new ResponseEntity<>(projectMapper
-                .toProjectResponseDTO(project), HttpStatus.OK);
+                .toProjectResponseDTO(projectService.createProject(projectCreateRequestDTO)), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/find-by-name")
+    public ResponseEntity<List<ProjectResponseDTO>> findProjectsByName(@RequestParam("name") String name) {
+        return new ResponseEntity<>(projectMapper.toProjectResponseDTOList(projectService.getProjectsByName(name)),
+                HttpStatus.OK);
+    }
 }

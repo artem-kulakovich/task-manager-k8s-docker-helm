@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 public class UserResponseDTO {
     @JsonProperty(value = "id")
-    private long id;
+    private Long id;
 
     @JsonProperty(value = "firstName")
     private String firstName;

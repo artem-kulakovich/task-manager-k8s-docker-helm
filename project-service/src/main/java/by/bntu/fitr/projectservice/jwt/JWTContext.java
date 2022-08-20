@@ -17,7 +17,7 @@ import java.util.Map;
 public class JWTContext {
     private String token;
     private String userName;
-    private long userId;
+    private Long userId;
     private String email;
     private String roleName;
     private List<String> projectRoleName;

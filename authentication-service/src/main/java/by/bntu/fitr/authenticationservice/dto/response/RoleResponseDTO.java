@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 public class RoleResponseDTO {
     @JsonProperty(value = "id")
-    private long id;
+    private Long id;
 
     @JsonProperty(value = "name")
     private String name;

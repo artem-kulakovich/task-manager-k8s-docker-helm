@@ -23,26 +23,21 @@ public class ProjectMapper {
     }
 
     public ProjectResponseDTO toProjectResponseDTO(Project project) {
-        return new ProjectResponseDTO(
+        return project == null
+                ? null
+                : new ProjectResponseDTO(
                 project.getId(),
                 project.getName(),
                 project.getDescription(),
-                projectInfoMapper.toProjectInfosResponseDTO(
-                        getProjectInfoListWithoutNull(project)
-                )
+                project.getCreateAt(),
+                projectInfoMapper.toProjectInfoResponseDTOList(project.getProjectInfoList())
         );
     }
 
     public List<ProjectResponseDTO> toProjectResponseDTOList(List<Project> projectList) {
-        return projectList.stream().map(project -> new ProjectResponseDTO(
-                project.getId(),
-                project.getName(),
-                project.getDescription(),
-                projectInfoMapper.toProjectInfosResponseDTO(getProjectInfoListWithoutNull(project))
-        )).collect(Collectors.toList());
-    }
-
-    private List<ProjectInfo> getProjectInfoListWithoutNull(Project project) {
-        return project.getProjectInfoList() == null ? Collections.emptyList() : project.getProjectInfoList();
+        return projectList == null
+                ? null
+                : projectList.stream().map(this::toProjectResponseDTO)
+                .collect(Collectors.toList());
     }
 }
