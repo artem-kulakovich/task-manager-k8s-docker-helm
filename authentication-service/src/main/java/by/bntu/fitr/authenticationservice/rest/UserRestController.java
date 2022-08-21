@@ -29,4 +29,9 @@ public class UserRestController {
     public ResponseEntity<UserResponseDTO> getUserByUsername(@RequestParam("userName") final String userName) {
         return new ResponseEntity<>(userMapper.toUserResponseDTO(userService.getUserByUserName(userName)), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/find-by-email")
+    public ResponseEntity<UserResponseDTO> getUserByEmail(@RequestParam("email") final String email) {
+        return new ResponseEntity<>(userMapper.toUserResponseDTO(userService.getUserByEmail(email)), HttpStatus.OK);
+    }
 }

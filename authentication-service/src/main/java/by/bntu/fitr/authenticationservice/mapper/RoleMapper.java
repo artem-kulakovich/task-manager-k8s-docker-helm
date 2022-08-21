@@ -25,6 +25,7 @@ public class RoleMapper {
                 : new RoleResponseDTO(
                 role.getId(),
                 role.getName(),
+                role.getCreateAt(),
                 permissionMapper.toPermissionResponseDTOList(role.getRolePermissionList())
         );
     }

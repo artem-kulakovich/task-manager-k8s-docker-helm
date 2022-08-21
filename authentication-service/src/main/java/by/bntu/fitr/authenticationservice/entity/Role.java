@@ -10,6 +10,7 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -18,16 +19,17 @@ import java.util.List;
 @Entity
 @Table(name = "\"role\"")
 public class Role {
-    @JsonProperty(value = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
     @SequenceGenerator(name = "role_seq", sequenceName = "role_id_seq", allocationSize = 1)
     @Setter(value = AccessLevel.PRIVATE)
     private Long id;
 
-    @JsonProperty(value = "name")
     @Column(name = "name", nullable = false, unique = true)
     private String name;
+
+    @Column(name = "create_at")
+    private Date createAt;
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
@@ -55,5 +57,10 @@ public class Role {
             rolePermissionList = new ArrayList<>();
         }
         rolePermissionList.addAll(permissions);
+    }
+
+    @PrePersist
+    public void createDate() {
+        createAt = new Date();
     }
 }

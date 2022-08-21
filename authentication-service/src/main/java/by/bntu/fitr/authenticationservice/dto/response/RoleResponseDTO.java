@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -18,6 +19,9 @@ public class RoleResponseDTO {
 
     @JsonProperty(value = "name")
     private String name;
+
+    @JsonProperty(value = "createAt")
+    private Date createAt;
 
     @JsonProperty(value = "rolePermissions")
     private List<PermissionResponseDTO> permissionResponseDTOList;

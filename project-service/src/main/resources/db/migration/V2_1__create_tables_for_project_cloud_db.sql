@@ -16,7 +16,7 @@ CREATE TABLE public."project"
     create_at    timestamp with time zone,
     workspace_id integer,
     PRIMARY KEY (id),
-    UNIQUE (name)
+    UNIQUE (name, workspace_id)
 );
 
 CREATE TABLE public."project_info"

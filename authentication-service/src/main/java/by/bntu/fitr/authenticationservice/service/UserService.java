@@ -16,6 +16,8 @@ public interface UserService {
 
     boolean isUserExists(final String userName);
 
-    User getUserById(Long id);
+    User getUserById(final Long id);
+
+    User getUserByEmail(final String email);
 
 }

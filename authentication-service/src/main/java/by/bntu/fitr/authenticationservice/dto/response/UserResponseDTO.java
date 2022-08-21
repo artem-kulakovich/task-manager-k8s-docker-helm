@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -27,6 +28,9 @@ public class UserResponseDTO {
 
     @JsonProperty(value = "email")
     private String email;
+
+    @JsonProperty(value = "createAt")
+    private Date createAt;
 
     @JsonProperty(value = "role")
     private RoleResponseDTO roleResponseDTO;

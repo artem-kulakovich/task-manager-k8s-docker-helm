@@ -20,12 +20,31 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Role getRoleByName(final String name) {
         return roleRepository.findByName(name).orElseThrow(
-                () -> new RoleNotFoundException("Role")
+                () -> new RoleNotFoundException(CommonConstant.ROLE)
         );
     }
 
     @Override
     public String getRoleName(final Role role) {
         return role == null ? CommonConstant.EMPTY_STRING : role.getName();
+    }
+
+    @Override
+    public Role createRole(final String name) {
+        return roleRepository.save(new Role(name));
+    }
+
+    @Override
+    public Role getRoleByNameOrElseNull(final String name) {
+        return roleRepository.findByName(name).orElse(null);
+    }
+
+    @Override
+    public Role createIfNotExists(final String name) {
+        Role role = getRoleByNameOrElseNull(name);
+        if (role == null) {
+            role = roleRepository.save(new Role(name));
+        }
+        return role;
     }
 }

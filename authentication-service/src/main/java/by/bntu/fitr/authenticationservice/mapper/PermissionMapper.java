@@ -22,7 +22,8 @@ public class PermissionMapper {
                 ? null
                 : new PermissionResponseDTO(
                 permission.getId(),
-                permission.getName()
+                permission.getName(),
+                permission.getCreateAt()
         );
     }
 

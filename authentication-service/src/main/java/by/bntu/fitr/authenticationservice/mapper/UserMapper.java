@@ -34,6 +34,7 @@ public class UserMapper {
                 user.getLastName(),
                 user.getUserName(),
                 user.getEmail(),
+                user.getCreateAt(),
                 roleMapper.toRoleResponseDTO(user.getRole())
         );
     }

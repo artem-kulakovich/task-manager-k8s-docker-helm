@@ -1,9 +1,13 @@
 package by.bntu.fitr.authenticationservice.service.impl;
 
+import by.bntu.fitr.authenticationservice.constant.CommonConstant;
 import by.bntu.fitr.authenticationservice.constant.ErrorMessageConstant;
+import by.bntu.fitr.authenticationservice.constant.PermissionConstant;
 import by.bntu.fitr.authenticationservice.constant.RoleConstant;
 import by.bntu.fitr.authenticationservice.dto.request.UserCreateRequestDTO;
 import by.bntu.fitr.authenticationservice.dto.request.UserLoginRequestDTO;
+import by.bntu.fitr.authenticationservice.entity.Permission;
+import by.bntu.fitr.authenticationservice.entity.Role;
 import by.bntu.fitr.authenticationservice.entity.User;
 import by.bntu.fitr.authenticationservice.exception.LoginException;
 import by.bntu.fitr.authenticationservice.exception.PasswordMismatchException;
@@ -18,7 +22,9 @@ import by.bntu.fitr.authenticationservice.service.RoleService;
 import by.bntu.fitr.authenticationservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -49,9 +55,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByUserName(final String userName) {
         return userRepository.findByUserName(userName).orElseThrow(
-                () -> new UserNotFoundException("User")
+                () -> new UserNotFoundException(CommonConstant.USER)
         );
     }
+
 
     @Override
     public User registerUser(final UserCreateRequestDTO userCreateRequestDTO) {
@@ -64,10 +71,12 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userMapper.toUser(userCreateRequestDTO);
-        user.setRole(roleService.getRoleByName(RoleConstant.USER));
+        Role role = roleService.createIfNotExists(RoleConstant.USER);
+        Permission permission = permissionService.createIfNotExists(PermissionConstant.READ);
+        role.setRolePermissionList(Collections.singletonList(permission));
+        user.setRole(role);
         user.setPassword(jwtUtil.encodeWithMD5(user.getPassword()));
-
-        return user;
+        return userRepository.save(user);
     }
 
     @Override
@@ -93,7 +102,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(final Long id) {
         return userRepository.findById(id).orElseThrow(
-                () -> new UserNotFoundException("User")
+                () -> new UserNotFoundException(CommonConstant.USER)
         );
+    }
+
+    @Override
+    public User getUserByEmail(final String email) {
+        return userRepository.findUserByEmail(email).orElseThrow(() -> new UserNotFoundException(CommonConstant.USER));
     }
 }
