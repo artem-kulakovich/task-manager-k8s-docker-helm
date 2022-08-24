@@ -17,7 +17,7 @@ public class RoleMapper {
         this.permissionMapper = permissionMapper;
     }
 
-    public RoleResponseDTO toRoleResponseDTO(Role role) {
+    public RoleResponseDTO toRoleResponseDTO(final Role role) {
         return role == null
                 ? null
                 : new RoleResponseDTO(
@@ -28,7 +28,7 @@ public class RoleMapper {
         );
     }
 
-    public List<RoleResponseDTO> toRoleResponseDTOList(List<Role> roleList) {
+    public List<RoleResponseDTO> toRoleResponseDTOList(final List<Role> roleList) {
         return roleList == null
                 ? null
                 : roleList.stream().map(this::toRoleResponseDTO)

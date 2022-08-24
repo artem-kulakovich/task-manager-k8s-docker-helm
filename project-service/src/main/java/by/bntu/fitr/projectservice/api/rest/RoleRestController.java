@@ -30,13 +30,13 @@ public class RoleRestController {
     }
 
     @GetMapping(value = "/")
-    public ResponseEntity<List<RoleResponseDTO>> getAllRolesBelongedToCurrentProject(@RequestParam("projectId") Long projectId) {
+    public ResponseEntity<List<RoleResponseDTO>> getAllRolesBelongedToCurrentProject(@RequestParam("projectId") final Long projectId) {
         return new ResponseEntity<>(roleMapper.toRoleResponseDTOList(roleService.getRoleBelongedToCurrentProject(projectId)),
                 HttpStatus.OK);
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<RoleResponseDTO> createRole(@RequestBody CreateRoleRequestDTO createRoleRequestDTO) {
+    public ResponseEntity<RoleResponseDTO> createRole(@RequestBody final CreateRoleRequestDTO createRoleRequestDTO) {
         Project project = projectService.getProjectById(createRoleRequestDTO.getProjectId());
         return new ResponseEntity<>(roleMapper.toRoleResponseDTO(roleService.createRole(createRoleRequestDTO.getName(), project)),
                 HttpStatus.OK);

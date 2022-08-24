@@ -31,7 +31,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
     @Override
     public Workspace createWorkspace(final WorkspaceCreateRequestDTO workspaceCreateRequestDTO) {
-        if (isWorkspaceExists(workspaceCreateRequestDTO.getName())) {
+        if (isWorkspaceExists(workspaceCreateRequestDTO.getName(), jwtContext.getUserId())) {
             throw new WorkspaceAlreadyExistsException(CommonConstant.WORKSPACE);
         }
         Workspace workspace = workspaceMapper.toWorkSpace(workspaceCreateRequestDTO);
@@ -40,7 +40,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     @Override
-    public Workspace getWorkspaceById(Long id) {
+    public Workspace getWorkspaceById(final Long id) {
         return workspaceRepository.findById(id).orElseThrow(() -> new WorkspaceNotFoundException(CommonConstant.WORKSPACE));
     }
 
@@ -50,7 +50,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     @Override
-    public boolean isWorkspaceExists(String name) {
-        return workspaceRepository.findWorkspaceByName(name).isPresent();
+    public boolean isWorkspaceExists(final String name, Long userId) {
+        return workspaceRepository.findWorkspaceByNameAndUserId(name, userId).isPresent();
     }
 }

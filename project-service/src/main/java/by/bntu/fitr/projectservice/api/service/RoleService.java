@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface RoleService {
 
-    Role getRoleByName(String name);
+    Role getRoleByName(final String name);
 
-    List<Role> getRoleBelongedToCurrentProject(Long projectId);
+    List<Role> getRoleBelongedToCurrentProject(final Long projectId);
 
-    Role createRole(String name, Project project);
+    Role createRole(final String name, final Project project);
 
-    Role getRoleById(Long id);
+    Role getRoleById(final Long id);
 }

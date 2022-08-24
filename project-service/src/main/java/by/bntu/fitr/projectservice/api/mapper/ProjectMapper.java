@@ -17,7 +17,7 @@ public class ProjectMapper {
         this.projectInfoMapper = projectInfoMapper;
     }
 
-    public ProjectResponseDTO toProjectResponseDTO(Project project) {
+    public ProjectResponseDTO toProjectResponseDTO(final Project project) {
         return project == null
                 ? null
                 : new ProjectResponseDTO(
@@ -29,7 +29,7 @@ public class ProjectMapper {
         );
     }
 
-    public List<ProjectResponseDTO> toProjectResponseDTOList(List<Project> projectList) {
+    public List<ProjectResponseDTO> toProjectResponseDTOList(final List<Project> projectList) {
         return projectList == null
                 ? null
                 : projectList.stream().map(this::toProjectResponseDTO)

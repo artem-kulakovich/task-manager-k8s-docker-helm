@@ -17,7 +17,7 @@ public class ProjectInfoServiceImpl implements ProjectInfoService {
 
 
     @Override
-    public ProjectInfo createProjectInfo(ProjectInfo projectInfo) {
+    public ProjectInfo createProjectInfo(final ProjectInfo projectInfo) {
         return projectInfoRepository.save(projectInfo);
     }
 }

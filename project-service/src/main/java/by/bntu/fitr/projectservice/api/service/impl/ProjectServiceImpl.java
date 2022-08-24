@@ -1,12 +1,14 @@
 package by.bntu.fitr.projectservice.api.service.impl;
 
 import by.bntu.fitr.projectservice.api.constant.CommonConstant;
+import by.bntu.fitr.projectservice.api.constant.ErrorMessageConstant;
 import by.bntu.fitr.projectservice.api.dto.request.ProjectCreateRequestDTO;
 import by.bntu.fitr.projectservice.api.entity.Permission;
 import by.bntu.fitr.projectservice.api.entity.Project;
 import by.bntu.fitr.projectservice.api.entity.ProjectInfo;
 import by.bntu.fitr.projectservice.api.entity.Role;
 import by.bntu.fitr.projectservice.api.exception.ProjectAlreadyExistsExceptionException;
+import by.bntu.fitr.projectservice.api.exception.UserAlreadyAssignToTheProjectException;
 import by.bntu.fitr.projectservice.api.jwt.JWTContext;
 import by.bntu.fitr.projectservice.api.mapper.ProjectMapper;
 import by.bntu.fitr.projectservice.api.service.*;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -83,7 +86,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Transactional
     @Override
-    public Project createProject(ProjectCreateRequestDTO projectCreateRequestDTO) {
+    public Project createProject(final ProjectCreateRequestDTO projectCreateRequestDTO) {
         if (isProjectExists(projectCreateRequestDTO.getName(), projectCreateRequestDTO.getWorkspaceId())) {
             throw new ProjectAlreadyExistsExceptionException(CommonConstant.PROJECT);
         }
@@ -115,25 +118,34 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> getProjectsByName(String name) {
+    public List<Project> getProjectsByName(final String name) {
         return projectRepository.findProjectByNameLikeIgnoreCase(name);
     }
 
     @Override
-    public boolean isProjectExists(String name, Long workspaceId) {
+    public boolean isProjectExists(final String name, final Long workspaceId) {
         return projectRepository.findProjectByNameAndWorkspaceId(name, workspaceId).isPresent();
     }
 
     @Override
-    public Project getProjectById(Long id) {
+    public Project getProjectById(final Long id) {
         return projectRepository.findById(id).orElseThrow(() -> new ProjectNotFoundException(CommonConstant.PROJECT));
     }
 
     @Override
-    public void assignToProjects(AssignToProjectRequestDTO assignToProjectRequestDTO) {
+    public void assignToProjects(final AssignToProjectRequestDTO assignToProjectRequestDTO) {
         Project project = getProjectById(assignToProjectRequestDTO.getProjectId());
-        Role role = roleService.getRoleById(assignToProjectRequestDTO.getRoleId());
         UserClientResponseDTO userClientResponseDTO = userClient.getUserByEmail(assignToProjectRequestDTO.getEmail());
+        List<Long> userIdList = project.getProjectInfoList().stream().map(ProjectInfo::getUserId).collect(Collectors.toList());
+        boolean isUserAlreadyAssignToTheProject = userIdList.stream()
+                .anyMatch(userId -> userId == userClientResponseDTO.getId());
+
+        if (isUserAlreadyAssignToTheProject) {
+            throw new UserAlreadyAssignToTheProjectException(ErrorMessageConstant.USER_ALREADT_ASSIGNT_TO_THE_PROJECT_EXCEPTION_MSG);
+        }
+
+        Role role = roleService.getRoleById(assignToProjectRequestDTO.getRoleId());
+
         projectInfoService.createProjectInfo(projectInfoFactory.getProjectInfo(userClientResponseDTO.getId(), role, project));
     }
 

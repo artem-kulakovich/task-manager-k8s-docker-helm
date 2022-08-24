@@ -25,7 +25,7 @@ public class WorkspaceRestController {
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<WorkspaceResponseDTO> createWorkspace(@RequestBody WorkspaceCreateRequestDTO workspaceCreateRequestDTO) {
+    public ResponseEntity<WorkspaceResponseDTO> createWorkspace(@RequestBody final WorkspaceCreateRequestDTO workspaceCreateRequestDTO) {
         return new ResponseEntity<>(workspaceMapper
                 .toWorkspaceResponseDTO(workspaceService.createWorkspace(workspaceCreateRequestDTO)), HttpStatus.OK);
     }

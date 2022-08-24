@@ -18,13 +18,13 @@ public class WorkspaceMapper {
         this.projectMapper = projectMapper;
     }
 
-    public Workspace toWorkSpace(WorkspaceCreateRequestDTO workspaceCreateRequestDTO) {
+    public Workspace toWorkSpace(final WorkspaceCreateRequestDTO workspaceCreateRequestDTO) {
         return new Workspace(
                 workspaceCreateRequestDTO.getName()
         );
     }
 
-    public WorkspaceResponseDTO toWorkspaceResponseDTO(Workspace workspace) {
+    public WorkspaceResponseDTO toWorkspaceResponseDTO(final Workspace workspace) {
         return workspace == null
                 ? null
                 : new WorkspaceResponseDTO(
@@ -36,7 +36,7 @@ public class WorkspaceMapper {
         );
     }
 
-    public List<WorkspaceResponseDTO> toWorkspaceResponseDTOList(List<Workspace> workspaceList) {
+    public List<WorkspaceResponseDTO> toWorkspaceResponseDTOList(final List<Workspace> workspaceList) {
         return workspaceList == null
                 ? null
                 : workspaceList.stream().map(this::toWorkspaceResponseDTO)

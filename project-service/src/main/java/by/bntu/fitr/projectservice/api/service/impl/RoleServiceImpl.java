@@ -25,22 +25,22 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role getRoleByName(String name) {
+    public Role getRoleByName(final String name) {
         return roleRepository.findRoleByName(name).orElseThrow(() -> new RoleNotFoundException(CommonConstant.ROLE));
     }
 
     @Override
-    public List<Role> getRoleBelongedToCurrentProject(Long projectId) {
+    public List<Role> getRoleBelongedToCurrentProject(final Long projectId) {
         return roleRepository.findRoleByProjectId(projectId);
     }
 
     @Override
-    public Role createRole(String name, Project project) {
+    public Role createRole(final String name, final Project project) {
         return roleRepository.save(roleFactory.getRole(name, project));
     }
 
     @Override
-    public Role getRoleById(Long id) {
+    public Role getRoleById(final Long id) {
         return roleRepository.findById(id).orElseThrow(() -> new RoleNotFoundException(CommonConstant.ROLE));
     }
 }

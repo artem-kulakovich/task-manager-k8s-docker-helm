@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/authentication-service/users")
 public class UserRestController {
@@ -33,5 +35,10 @@ public class UserRestController {
     @GetMapping(value = "/find-by-email")
     public ResponseEntity<UserResponseDTO> getUserByEmail(@RequestParam("email") final String email) {
         return new ResponseEntity<>(userMapper.toUserResponseDTO(userService.getUserByEmail(email)), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/")
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        return new ResponseEntity<>(userMapper.toUserResponseDTOList(userService.getAllUsers()), HttpStatus.OK);
     }
 }

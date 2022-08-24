@@ -110,4 +110,9 @@ public class UserServiceImpl implements UserService {
     public User getUserByEmail(final String email) {
         return userRepository.findUserByEmail(email).orElseThrow(() -> new UserNotFoundException(CommonConstant.USER));
     }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 }

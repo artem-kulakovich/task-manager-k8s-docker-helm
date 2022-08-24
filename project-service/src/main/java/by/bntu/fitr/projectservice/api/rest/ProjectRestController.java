@@ -32,19 +32,19 @@ public class ProjectRestController {
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<ProjectResponseDTO> creatProject(@RequestBody ProjectCreateRequestDTO projectCreateRequestDTO) {
+    public ResponseEntity<ProjectResponseDTO> createProject(@RequestBody final ProjectCreateRequestDTO projectCreateRequestDTO) {
         return new ResponseEntity<>(projectMapper
                 .toProjectResponseDTO(projectService.createProject(projectCreateRequestDTO)), HttpStatus.OK);
     }
 
     @GetMapping(value = "/find-by-name")
-    public ResponseEntity<List<ProjectResponseDTO>> findProjectsByName(@RequestParam("name") String name) {
+    public ResponseEntity<List<ProjectResponseDTO>> findProjectsByName(@RequestParam("name") final String name) {
         return new ResponseEntity<>(projectMapper.toProjectResponseDTOList(projectService.getProjectsByName(name)),
                 HttpStatus.OK);
     }
 
     @PostMapping(value = "/assign-to-project")
-    public ResponseEntity<?> assignToProject(@RequestBody AssignToProjectRequestDTO assignToProjectRequestDTO) {
+    public ResponseEntity<?> assignToProject(@RequestBody final AssignToProjectRequestDTO assignToProjectRequestDTO) {
         projectService.assignToProjects(assignToProjectRequestDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }

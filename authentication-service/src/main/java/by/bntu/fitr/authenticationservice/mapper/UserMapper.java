@@ -7,6 +7,10 @@ import by.bntu.fitr.authenticationservice.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Component
 public class UserMapper {
@@ -39,4 +43,10 @@ public class UserMapper {
         );
     }
 
+    public List<UserResponseDTO> toUserResponseDTOList(final List<User> userList) {
+        return userList == null
+                ? Collections.emptyList()
+                : userList.stream().map((this::toUserResponseDTO))
+                .collect(Collectors.toList());
+    }
 }

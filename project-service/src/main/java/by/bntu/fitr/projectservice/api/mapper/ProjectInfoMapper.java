@@ -17,14 +17,14 @@ public class ProjectInfoMapper {
         this.roleMapper = roleMapper;
     }
 
-    public List<ProjectInfoResponseDTO> toProjectInfoResponseDTOList(List<ProjectInfo> projectInfos) {
+    public List<ProjectInfoResponseDTO> toProjectInfoResponseDTOList(final List<ProjectInfo> projectInfos) {
         return projectInfos == null
                 ? null
                 : projectInfos.stream().map(this::toProjectInfoResponseDTO)
                 .collect(Collectors.toList());
     }
 
-    public ProjectInfoResponseDTO toProjectInfoResponseDTO(ProjectInfo projectInfo) {
+    public ProjectInfoResponseDTO toProjectInfoResponseDTO(final ProjectInfo projectInfo) {
         return projectInfo == null
                 ? null
                 : new ProjectInfoResponseDTO(

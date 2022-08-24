@@ -5,9 +5,9 @@ import by.bntu.fitr.projectservice.api.entity.Permission;
 
 public interface PermissionService {
 
-    Permission createPermission(String name);
+    Permission createPermission(final String name);
 
-    boolean isPermissionExists(String name);
+    boolean isPermissionExists(final String name);
 
-    Permission getPermissionOrElseNull(String name);
+    Permission getPermissionOrElseNull(final String name);
 }

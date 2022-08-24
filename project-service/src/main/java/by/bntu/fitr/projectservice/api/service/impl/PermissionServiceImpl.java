@@ -20,17 +20,17 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public Permission createPermission(String name) {
+    public Permission createPermission(final String name) {
         return permissionRepository.save(permissionFactory.getPermission(name));
     }
 
     @Override
-    public boolean isPermissionExists(String name) {
+    public boolean isPermissionExists(final String name) {
         return permissionRepository.findPermissionByName(name).isPresent();
     }
 
     @Override
-    public Permission getPermissionOrElseNull(String name) {
+    public Permission getPermissionOrElseNull(final String name) {
         return permissionRepository.findPermissionByName(name).orElse(null);
     }
 

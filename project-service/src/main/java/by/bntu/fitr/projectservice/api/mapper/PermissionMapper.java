@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
 @Component
 public class PermissionMapper {
 
-    public List<PermissionResponseDTO> toPermissionResponseDTOList(List<Permission> permissionList) {
+    public List<PermissionResponseDTO> toPermissionResponseDTOList(final List<Permission> permissionList) {
         return permissionList == null
                 ? null
                 : permissionList.stream().map(this::toPermissionResponseDTO)
                 .collect(Collectors.toList());
     }
 
-    public PermissionResponseDTO toPermissionResponseDTO(Permission permission) {
+    public PermissionResponseDTO toPermissionResponseDTO(final Permission permission) {
         return permission == null
                 ? null
                 : new PermissionResponseDTO(

@@ -8,9 +8,9 @@ import java.util.List;
 public interface WorkspaceService {
     Workspace createWorkspace(final WorkspaceCreateRequestDTO workspaceCreateRequestDTO);
 
-    Workspace getWorkspaceById(Long id);
+    Workspace getWorkspaceById(final Long id);
 
     List<Workspace> getAllWorkspacesBelongedToCurrentUser();
 
-    boolean isWorkspaceExists(String name);
+    boolean isWorkspaceExists(final String name, final Long userId);
 }

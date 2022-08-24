@@ -10,13 +10,13 @@ public interface ProjectService {
 
     List<Project> getProjectsByUser();
 
-    Project createProject(ProjectCreateRequestDTO projectCreateRequestDTO);
+    Project createProject(final ProjectCreateRequestDTO projectCreateRequestDTO);
 
-    List<Project> getProjectsByName(String name);
+    List<Project> getProjectsByName(final String name);
 
-    boolean isProjectExists(String name, Long workspaceId);
+    boolean isProjectExists(final String name, final Long workspaceId);
 
-    Project getProjectById(Long id);
+    Project getProjectById(final Long id);
 
-    void assignToProjects(AssignToProjectRequestDTO assignToProjectRequestDTO);
+    void assignToProjects(final AssignToProjectRequestDTO assignToProjectRequestDTO);
 }
