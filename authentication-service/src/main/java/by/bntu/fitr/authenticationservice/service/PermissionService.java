@@ -1,10 +1,12 @@
 package by.bntu.fitr.authenticationservice.service;
 
-import by.bntu.fitr.authenticationservice.entity.Permission;
-import by.bntu.fitr.authenticationservice.entity.Role;
+
+
+
+import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.Permission;
+import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.Role;
 
 import java.util.List;
-import java.util.Map;
 
 public interface PermissionService {
 

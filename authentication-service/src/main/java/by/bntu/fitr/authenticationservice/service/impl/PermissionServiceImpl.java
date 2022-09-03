@@ -1,25 +1,27 @@
 package by.bntu.fitr.authenticationservice.service.impl;
 
-import by.bntu.fitr.authenticationservice.entity.Permission;
-import by.bntu.fitr.authenticationservice.entity.Role;
-import by.bntu.fitr.authenticationservice.repository.PermissionRepository;
+import by.bntu.fitr.authenticationservice.dao.PermissionDAO;
+import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.Permission;
+import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.Role;
+import by.bntu.fitr.authenticationservice.factory.PermissionFactory;
 import by.bntu.fitr.authenticationservice.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class PermissionServiceImpl implements PermissionService {
-    private final PermissionRepository permissionRepository;
+    private final PermissionDAO permissionDAO;
+    private final PermissionFactory permissionFactory;
 
     @Autowired
-    public PermissionServiceImpl(PermissionRepository permissionRepository) {
-        this.permissionRepository = permissionRepository;
+    public PermissionServiceImpl(final PermissionDAO permissionDAO,
+                                 final PermissionFactory permissionFactory) {
+        this.permissionDAO = permissionDAO;
+        this.permissionFactory = permissionFactory;
     }
 
     @Override
@@ -28,24 +30,24 @@ public class PermissionServiceImpl implements PermissionService {
             return Collections.emptyList();
         }
 
-        List<Permission> permissionList = role.getRolePermissionList();
+        List<Permission> permissionList = role.getPermissionList();
         return permissionList == null ? Collections.emptyList()
                 : permissionList.stream().map(Permission::getName)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Permission createIfNotExists(String name) {
+    public Permission createIfNotExists(final String name) {
         Permission permission = getPermissionByNameOrElseNull(name);
         if (permission == null) {
-            permission = permissionRepository.save(new Permission(name));
+            permission = permissionDAO.save(permissionFactory.getPermission(name));
         }
         return permission;
     }
 
     @Override
-    public Permission getPermissionByNameOrElseNull(String name) {
-        return permissionRepository.findPermissionByName(name).orElse(null);
+    public Permission getPermissionByNameOrElseNull(final String name) {
+        return permissionDAO.findPermissionByName(name).orElse(null);
     }
 
 }

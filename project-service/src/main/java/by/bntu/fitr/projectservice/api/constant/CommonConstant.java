@@ -14,4 +14,6 @@ public interface CommonConstant {
     String ROLE = "Role";
     String WORKSPACE = "Workspace";
 
+    String USER = "User";
+
 }

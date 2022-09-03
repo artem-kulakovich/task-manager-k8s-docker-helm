@@ -4,11 +4,12 @@ import by.bntu.fitr.authenticationservice.constant.CommonConstant;
 import by.bntu.fitr.authenticationservice.constant.ErrorMessageConstant;
 import by.bntu.fitr.authenticationservice.constant.PermissionConstant;
 import by.bntu.fitr.authenticationservice.constant.RoleConstant;
+import by.bntu.fitr.authenticationservice.dao.UserDAO;
+import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.Permission;
+import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.Role;
+import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.User;
 import by.bntu.fitr.authenticationservice.dto.request.UserCreateRequestDTO;
 import by.bntu.fitr.authenticationservice.dto.request.UserLoginRequestDTO;
-import by.bntu.fitr.authenticationservice.entity.Permission;
-import by.bntu.fitr.authenticationservice.entity.Role;
-import by.bntu.fitr.authenticationservice.entity.User;
 import by.bntu.fitr.authenticationservice.exception.LoginException;
 import by.bntu.fitr.authenticationservice.exception.PasswordMismatchException;
 import by.bntu.fitr.authenticationservice.exception.UserAlreadyExistsException;
@@ -29,7 +30,6 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
     private final JWTUtil jwtUtil;
     private final PermissionService permissionService;
     private final UserMapper userMapper;
@@ -37,29 +37,31 @@ public class UserServiceImpl implements UserService {
 
     private final RoleService roleService;
 
+    private final UserDAO userDAO;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository,
-                           JWTUtil jwtUtil,
-                           PermissionService permissionService,
-                           UserMapper userMapper,
-                           JWTTokenProvider jwtTokenProvider,
-                           RoleService roleService) {
-        this.userRepository = userRepository;
+    public UserServiceImpl(final JWTUtil jwtUtil,
+                           final PermissionService permissionService,
+                           final UserMapper userMapper,
+                           final JWTTokenProvider jwtTokenProvider,
+                           final RoleService roleService,
+                           final UserDAO userDAO) {
         this.jwtUtil = jwtUtil;
         this.permissionService = permissionService;
         this.userMapper = userMapper;
         this.jwtTokenProvider = jwtTokenProvider;
         this.roleService = roleService;
+        this.userDAO = userDAO;
     }
 
     @Override
     public User getUserByUserName(final String userName) {
-        return userRepository.findByUserName(userName).orElseThrow(
+        return userDAO.findUserByUserName(userName).orElseThrow(
                 () -> new UserNotFoundException(CommonConstant.USER)
         );
     }
 
-
+    @Transactional
     @Override
     public User registerUser(final UserCreateRequestDTO userCreateRequestDTO) {
         if (!userCreateRequestDTO.getPassword().equals(userCreateRequestDTO.getRepeatPassword())) {
@@ -73,14 +75,15 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toUser(userCreateRequestDTO);
         Role role = roleService.createIfNotExists(RoleConstant.USER);
         Permission permission = permissionService.createIfNotExists(PermissionConstant.READ);
-        role.setRolePermissionList(Collections.singletonList(permission));
-        user.setRole(role);
+        role.setPermissionList(Collections.singletonList(permission));
+        user.setRoleId(Integer.valueOf(String.valueOf(role.getId())));
         user.setPassword(jwtUtil.encodeWithMD5(user.getPassword()));
-        return userRepository.save(user);
+        return userDAO.save(user);
     }
 
     @Override
     public String login(final UserLoginRequestDTO userLoginRequestDTO) {
+
         try {
             User user = getUserByUserName(userLoginRequestDTO.getUserName());
             return jwtTokenProvider.createToken(user.getId(),
@@ -96,23 +99,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isUserExists(final String userName) {
-        return userRepository.findByUserName(userName).isPresent();
+        return userDAO.findUserByUserName(userName).isPresent();
     }
 
     @Override
     public User getUserById(final Long id) {
-        return userRepository.findById(id).orElseThrow(
+        return userDAO.findUserById(id, CommonConstant.FETCH_TYPE_EAGER).orElseThrow(
                 () -> new UserNotFoundException(CommonConstant.USER)
         );
     }
 
     @Override
     public User getUserByEmail(final String email) {
-        return userRepository.findUserByEmail(email).orElseThrow(() -> new UserNotFoundException(CommonConstant.USER));
+        return userDAO.findUserByEmail(email).orElseThrow(() -> new UserNotFoundException(CommonConstant.USER));
     }
 
     @Override
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userDAO.finaAllUsers();
     }
 }

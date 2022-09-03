@@ -1,9 +1,9 @@
 package by.bntu.fitr.authenticationservice.service;
 
+import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.User;
 import by.bntu.fitr.authenticationservice.dto.request.UserCreateRequestDTO;
 import by.bntu.fitr.authenticationservice.dto.request.UserLoginRequestDTO;
-import by.bntu.fitr.authenticationservice.dto.response.UserResponseDTO;
-import by.bntu.fitr.authenticationservice.entity.User;
+
 
 import java.util.List;
 

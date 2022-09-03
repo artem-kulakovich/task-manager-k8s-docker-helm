@@ -9,4 +9,7 @@ public interface CommonConstant {
     String PERMISSIONS_FOR_ROLE = "role_permissions";
     String ROLE = "Role";
     String USER = "User";
+
+    String FETCH_TYPE_EAGER = "EAGER";
+    String FETCH_TYPE_LAZY = "LAZY";
 }

@@ -19,4 +19,6 @@ public interface ProjectService {
     Project getProjectById(final Long id);
 
     void assignToProjects(final AssignToProjectRequestDTO assignToProjectRequestDTO);
+
+    List<Long> getUsersBelongedToProject(final Long projectId);
 }

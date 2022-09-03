@@ -14,4 +14,7 @@ public interface RoleService {
     Role createRole(final String name, final Project project);
 
     Role getRoleById(final Long id);
+
+    Role getRoleByUserIdOrElseNull(final Long userId, final Long projectId);
+
 }

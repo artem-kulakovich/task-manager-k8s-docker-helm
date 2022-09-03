@@ -7,15 +7,13 @@ import by.bntu.fitr.projectservice.api.entity.Permission;
 import by.bntu.fitr.projectservice.api.entity.Project;
 import by.bntu.fitr.projectservice.api.entity.ProjectInfo;
 import by.bntu.fitr.projectservice.api.entity.Role;
-import by.bntu.fitr.projectservice.api.exception.ProjectAlreadyExistsExceptionException;
-import by.bntu.fitr.projectservice.api.exception.UserAlreadyAssignToTheProjectException;
+import by.bntu.fitr.projectservice.api.exception.*;
 import by.bntu.fitr.projectservice.api.jwt.JWTContext;
 import by.bntu.fitr.projectservice.api.mapper.ProjectMapper;
 import by.bntu.fitr.projectservice.api.service.*;
 import by.bntu.fitr.projectservice.api.constant.PermissionConstant;
 import by.bntu.fitr.projectservice.api.constant.RoleConstant;
 import by.bntu.fitr.projectservice.api.dto.request.AssignToProjectRequestDTO;
-import by.bntu.fitr.projectservice.api.exception.ProjectNotFoundException;
 import by.bntu.fitr.projectservice.api.factory.ProjectFactory;
 import by.bntu.fitr.projectservice.api.factory.ProjectInfoFactory;
 import by.bntu.fitr.projectservice.api.factory.RoleFactory;
@@ -28,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -90,21 +87,23 @@ public class ProjectServiceImpl implements ProjectService {
         if (isProjectExists(projectCreateRequestDTO.getName(), projectCreateRequestDTO.getWorkspaceId())) {
             throw new ProjectAlreadyExistsExceptionException(CommonConstant.PROJECT);
         }
+
+        if (!workspaceService.getWorkspaceById(projectCreateRequestDTO
+                .getWorkspaceId()).getUserId().equals(jwtContext.getUserId())) {
+            throw new UserDoesntHavePermissionException(ErrorMessageConstant.USER_DOESNT_HAVE_PERMISSION_EXCEPTION_MSG);
+        }
+
         Project project = projectRepository.save(projectFactory.getProject(
                 projectCreateRequestDTO.getName(),
                 projectCreateRequestDTO.getDescription())
         );
         Role role = roleService.createRole(RoleConstant.ROLE_PROJECT_OWNER, project);
 
-        Permission readPermission = permissionService.getPermissionOrElseNull(PermissionConstant.PERMISSION_READ);
-        Permission writePermission = permissionService.getPermissionOrElseNull(PermissionConstant.PERMISSION_WRITE);
+        Permission allPermission = permissionService.getPermissionOrElseNull(PermissionConstant.ALL_PERMISSIONS);
 
-        role.addPermission(readPermission == null
-                ? permissionService.createPermission(PermissionConstant.PERMISSION_READ)
-                : readPermission);
-        role.addPermission(writePermission == null
-                ? permissionService.createPermission(PermissionConstant.PERMISSION_WRITE)
-                : writePermission);
+        role.addPermission(allPermission == null
+                ? permissionService.createPermission(PermissionConstant.ALL_PERMISSIONS)
+                : allPermission);
 
         ProjectInfo projectInfo = projectInfoService.createProjectInfo(projectInfoFactory.getProjectInfo(
                 jwtContext.getUserId(),
@@ -132,13 +131,35 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.findById(id).orElseThrow(() -> new ProjectNotFoundException(CommonConstant.PROJECT));
     }
 
+    @Transactional
     @Override
     public void assignToProjects(final AssignToProjectRequestDTO assignToProjectRequestDTO) {
         Project project = getProjectById(assignToProjectRequestDTO.getProjectId());
+        List<Long> userIdBelongedToProject = getUsersBelongedToProject(project.getId());
+
+        boolean isUserFromCurrentProject = userIdBelongedToProject.stream()
+                .anyMatch((userId) -> userId.equals(jwtContext.getUserId()));
+
+        if (!isUserFromCurrentProject) {
+            throw new UserDoesntHavePermissionException(ErrorMessageConstant.USER_DOESNT_HAVE_PERMISSION_EXCEPTION_MSG);
+        }
+
+        Role currentRole = roleService.getRoleByUserIdOrElseNull(jwtContext.getUserId(), project.getId());
+
+        if (currentRole == null || currentRole.getPermissionList().stream().noneMatch(permission
+                -> permission.getName().equals(PermissionConstant.ALL_PERMISSIONS)
+                || permission.getName().equals(PermissionConstant.ASSIGN_PERMISSION))) {
+            throw new UserDoesntHavePermissionException(ErrorMessageConstant.USER_DOESNT_HAVE_PERMISSION_EXCEPTION_MSG);
+        }
+
+
         UserClientResponseDTO userClientResponseDTO = userClient.getUserByEmail(assignToProjectRequestDTO.getEmail());
-        List<Long> userIdList = project.getProjectInfoList().stream().map(ProjectInfo::getUserId).collect(Collectors.toList());
-        boolean isUserAlreadyAssignToTheProject = userIdList.stream()
-                .anyMatch(userId -> userId == userClientResponseDTO.getId());
+        if (userClientResponseDTO == null) {
+            throw new UserNotFoundException(CommonConstant.USER);
+        }
+
+        boolean isUserAlreadyAssignToTheProject = userIdBelongedToProject.stream()
+                .anyMatch(userId -> userId.equals(userClientResponseDTO.getId()));
 
         if (isUserAlreadyAssignToTheProject) {
             throw new UserAlreadyAssignToTheProjectException(ErrorMessageConstant.USER_ALREADT_ASSIGNT_TO_THE_PROJECT_EXCEPTION_MSG);
@@ -147,6 +168,12 @@ public class ProjectServiceImpl implements ProjectService {
         Role role = roleService.getRoleById(assignToProjectRequestDTO.getRoleId());
 
         projectInfoService.createProjectInfo(projectInfoFactory.getProjectInfo(userClientResponseDTO.getId(), role, project));
+    }
+
+    @Override
+    public List<Long> getUsersBelongedToProject(Long projectId) {
+        return getProjectById(projectId).getProjectInfoList().stream().map(ProjectInfo::getUserId)
+                .collect(Collectors.toList());
     }
 
 }

@@ -43,4 +43,9 @@ public class RoleServiceImpl implements RoleService {
     public Role getRoleById(final Long id) {
         return roleRepository.findById(id).orElseThrow(() -> new RoleNotFoundException(CommonConstant.ROLE));
     }
+
+    @Override
+    public Role getRoleByUserIdOrElseNull(final Long userId, final Long projectId) {
+        return roleRepository.findRoleByUserIdAndProjectId(userId, projectId).orElse(null);
+    }
 }

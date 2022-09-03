@@ -1,6 +1,7 @@
 package by.bntu.fitr.authenticationservice.service;
 
-import by.bntu.fitr.authenticationservice.entity.Role;
+
+import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.Role;
 
 public interface RoleService {
 

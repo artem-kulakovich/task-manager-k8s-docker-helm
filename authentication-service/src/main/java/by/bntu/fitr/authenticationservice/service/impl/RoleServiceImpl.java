@@ -1,25 +1,29 @@
 package by.bntu.fitr.authenticationservice.service.impl;
 
 import by.bntu.fitr.authenticationservice.constant.CommonConstant;
-import by.bntu.fitr.authenticationservice.entity.Role;
+import by.bntu.fitr.authenticationservice.dao.RoleDAO;
+import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.Role;
 import by.bntu.fitr.authenticationservice.exception.RoleNotFoundException;
-import by.bntu.fitr.authenticationservice.repository.RoleRepository;
+import by.bntu.fitr.authenticationservice.factory.RoleFactory;
 import by.bntu.fitr.authenticationservice.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RoleServiceImpl implements RoleService {
-    private final RoleRepository roleRepository;
+    private final RoleDAO roleDAO;
+    private final RoleFactory roleFactory;
 
     @Autowired
-    public RoleServiceImpl(final RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
+    public RoleServiceImpl(final RoleDAO roleDAO,
+                           final RoleFactory roleFactory) {
+        this.roleDAO = roleDAO;
+        this.roleFactory = roleFactory;
     }
 
     @Override
     public Role getRoleByName(final String name) {
-        return roleRepository.findByName(name).orElseThrow(
+        return roleDAO.findRoleByName(name).orElseThrow(
                 () -> new RoleNotFoundException(CommonConstant.ROLE)
         );
     }
@@ -31,19 +35,19 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role createRole(final String name) {
-        return roleRepository.save(new Role(name));
+        return roleDAO.save(roleFactory.getRole(name));
     }
 
     @Override
     public Role getRoleByNameOrElseNull(final String name) {
-        return roleRepository.findByName(name).orElse(null);
+        return roleDAO.findRoleByName(name).orElse(null);
     }
 
     @Override
     public Role createIfNotExists(final String name) {
         Role role = getRoleByNameOrElseNull(name);
         if (role == null) {
-            role = roleRepository.save(new Role(name));
+            role = roleDAO.save(roleFactory.getRole(name));
         }
         return role;
     }

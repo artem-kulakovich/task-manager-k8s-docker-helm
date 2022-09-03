@@ -1,5 +1,6 @@
 package by.bntu.fitr.authenticationservice.rest;
 
+import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.User;
 import by.bntu.fitr.authenticationservice.dto.response.UserResponseDTO;
 import by.bntu.fitr.authenticationservice.mapper.UserMapper;
 import by.bntu.fitr.authenticationservice.service.UserService;
@@ -23,8 +24,8 @@ public class UserRestController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable("id") final Long id) {
-        return new ResponseEntity<>(userMapper.toUserResponseDTO(userService.getUserById(id)), HttpStatus.OK);
+    public ResponseEntity<User> getUserById(@PathVariable("id") final Long id) {
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
 
     @GetMapping(value = "/find-by-username")

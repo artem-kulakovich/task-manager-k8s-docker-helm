@@ -1,6 +1,6 @@
 package by.bntu.fitr.authenticationservice.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Date;
 
+@Deprecated
 
 @NoArgsConstructor
 @Getter
