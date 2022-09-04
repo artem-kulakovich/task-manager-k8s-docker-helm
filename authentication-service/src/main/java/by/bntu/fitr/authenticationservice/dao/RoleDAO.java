@@ -7,11 +7,11 @@ import java.util.Optional;
 
 public interface RoleDAO {
 
-    Role save(Role role);
+    Role save(final Role role);
 
-    Optional<Role> findRoleById(final Long id);
+    Optional<Role> findRoleById(final Long id, final String fetchType, final int inheritLvl);
 
-    Optional<Role> findRoleByName(final String name);
+    Optional<Role> findRoleByName(final String name, final String fetchType, final int inheritLvl);
 
     List<Role> findAllRoles();
 }

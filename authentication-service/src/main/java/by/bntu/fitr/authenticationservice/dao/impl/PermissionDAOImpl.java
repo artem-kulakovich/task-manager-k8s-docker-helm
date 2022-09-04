@@ -47,7 +47,7 @@ public class PermissionDAOImpl implements PermissionDAO {
                 .from(PERMISSION)
                 .where(PERMISSION.ID.equal(id))
                 .fetchOne();
-        return Optional.of(permissionMapper.toPermission(record));
+        return Optional.ofNullable(permissionMapper.toPermission(record));
     }
 
     @SuppressWarnings("all")
@@ -57,7 +57,7 @@ public class PermissionDAOImpl implements PermissionDAO {
                 .from(PERMISSION)
                 .where(PERMISSION.NAME.equal(name))
                 .fetchOne();
-        return Optional.of(permissionMapper.toPermission(record));
+        return Optional.ofNullable(permissionMapper.toPermission(record));
     }
 
     @SuppressWarnings("all")

@@ -8,17 +8,24 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 import static by.bntu.fitr.authenticationservice.dao.jooq.tables.Permission.PERMISSION;
 
 @Component
 public class PermissionMapper {
 
     public List<PermissionResponseDTO> toPermissionResponseDTOList(final List<Permission> permissionList) {
-        return null;
+        return permissionList.stream().map(this::toPermissionResponseDTO).collect(Collectors.toList());
     }
 
     public PermissionResponseDTO toPermissionResponseDTO(final Permission permission) {
-        return null;
+        return permission == null
+                ? null
+                : PermissionResponseDTO.builder()
+                .id(permission.getId())
+                .name(permission.getName())
+                .createAt(permission.getCreateAt())
+                .build();
     }
 
     public Permission toPermission(final Record record) {

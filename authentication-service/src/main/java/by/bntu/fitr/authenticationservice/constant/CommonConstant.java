@@ -10,6 +10,17 @@ public interface CommonConstant {
     String ROLE = "Role";
     String USER = "User";
 
-    String FETCH_TYPE_EAGER = "EAGER";
-    String FETCH_TYPE_LAZY = "LAZY";
+    public interface FetchType {
+        String EAGER = "EAGER";
+        String LAZY = "LAZY";
+    }
+
+    public interface InheritLvl {
+        int USER_WITH_NONE = 0;
+        int USER_WITH_ROLE = 1;
+        int USER_WITH_ROLE_AND_PERMISSION = 2;
+
+        int ROLE_WITH_NONE = 0;
+        int ROLE_WITH_PERMISSION = 1;
+    }
 }

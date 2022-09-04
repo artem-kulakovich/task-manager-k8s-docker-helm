@@ -1,8 +1,11 @@
 package by.bntu.fitr.authenticationservice.rest;
 
+import by.bntu.fitr.authenticationservice.constant.CommonConstant;
 import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.User;
 import by.bntu.fitr.authenticationservice.dto.response.UserResponseDTO;
+import by.bntu.fitr.authenticationservice.handler.MapperHandler;
 import by.bntu.fitr.authenticationservice.mapper.UserMapper;
+import by.bntu.fitr.authenticationservice.repository.UserRepository;
 import by.bntu.fitr.authenticationservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,31 +18,44 @@ import java.util.List;
 @RequestMapping("/api/v1/authentication-service/users")
 public class UserRestController {
     private final UserService userService;
-    private final UserMapper userMapper;
+    private final MapperHandler mapperHandler;
 
     @Autowired
-    public UserRestController(final UserService userService, final UserMapper userMapper) {
+    public UserRestController(final UserService userService,
+                              final MapperHandler mapperHandler) {
         this.userService = userService;
-        this.userMapper = userMapper;
+        this.mapperHandler = mapperHandler;
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") final Long id) {
-        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable("id") final Long id) {
+        User user = userService.getUserById(id,
+                CommonConstant.FetchType.EAGER,
+                CommonConstant.InheritLvl.USER_WITH_ROLE_AND_PERMISSION);
+        return new ResponseEntity<>(mapperHandler.executeUserResponseDTOWithInherit(user,
+                CommonConstant.InheritLvl.USER_WITH_ROLE_AND_PERMISSION), HttpStatus.OK);
     }
 
     @GetMapping(value = "/find-by-username")
     public ResponseEntity<UserResponseDTO> getUserByUsername(@RequestParam("userName") final String userName) {
-        return new ResponseEntity<>(userMapper.toUserResponseDTO(userService.getUserByUserName(userName)), HttpStatus.OK);
+        User user = userService.getUserByUserName(userName,
+                CommonConstant.FetchType.EAGER,
+                CommonConstant.InheritLvl.USER_WITH_ROLE_AND_PERMISSION);
+        return new ResponseEntity<>(mapperHandler.executeUserResponseDTOWithInherit(user,
+                CommonConstant.InheritLvl.USER_WITH_ROLE_AND_PERMISSION), HttpStatus.OK);
     }
 
     @GetMapping(value = "/find-by-email")
     public ResponseEntity<UserResponseDTO> getUserByEmail(@RequestParam("email") final String email) {
-        return new ResponseEntity<>(userMapper.toUserResponseDTO(userService.getUserByEmail(email)), HttpStatus.OK);
+        User user = userService.getUserByEmail(email,
+                CommonConstant.FetchType.LAZY,
+                CommonConstant.InheritLvl.USER_WITH_NONE);
+        return new ResponseEntity<>(mapperHandler.executeUserResponseDTOWithInherit(user,
+                CommonConstant.InheritLvl.USER_WITH_ROLE_AND_PERMISSION), HttpStatus.OK);
     }
 
     @GetMapping(value = "/")
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        return new ResponseEntity<>(userMapper.toUserResponseDTOList(userService.getAllUsers()), HttpStatus.OK);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

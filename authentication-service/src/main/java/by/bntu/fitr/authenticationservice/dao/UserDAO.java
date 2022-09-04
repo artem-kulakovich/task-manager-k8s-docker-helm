@@ -9,11 +9,11 @@ public interface UserDAO {
 
     User save(final User user);
 
-    Optional<User> findUserById(final Long id, String fetchType);
+    Optional<User> findUserById(final Long id, final String fetchType, final int inheritLvl);
 
-    Optional<User> findUserByEmail(final String email);
+    Optional<User> findUserByEmail(final String email, final String fetchType, final int inheritLvl);
 
-    Optional<User> findUserByUserName(final String userName);
+    Optional<User> findUserByUserName(final String userName, final String fetchType, final int inheritLvl);
 
     List<User> finaAllUsers();
 

@@ -4,6 +4,7 @@ import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.User;
 import by.bntu.fitr.authenticationservice.dto.request.UserCreateRequestDTO;
 import by.bntu.fitr.authenticationservice.dto.response.UserResponseDTO;
 
+import lombok.NoArgsConstructor;
 import org.jooq.Record;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,13 +17,8 @@ import static by.bntu.fitr.authenticationservice.dao.jooq.tables.User.USER;
 
 
 @Component
+@NoArgsConstructor
 public class UserMapper {
-    private final RoleMapper roleMapper;
-
-    @Autowired
-    public UserMapper(final RoleMapper roleMapper) {
-        this.roleMapper = roleMapper;
-    }
 
     public User toUser(final UserCreateRequestDTO userCreateRequestDTO) {
         return new User()
@@ -34,11 +30,21 @@ public class UserMapper {
     }
 
     public UserResponseDTO toUserResponseDTO(final User user) {
-        return null;
+        return user == null
+                ? null
+                : UserResponseDTO.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .userName(user.getUserName())
+                .email(user.getEmail())
+                .createAt(user.getCreateAt())
+                .roleId(user.getRoleId())
+                .build();
     }
 
     public List<UserResponseDTO> toUserResponseDTOList(final List<User> userList) {
-        return null;
+        return userList.stream().map(this::toUserResponseDTO).collect(Collectors.toList());
     }
 
     public User toUser(final Record record) {

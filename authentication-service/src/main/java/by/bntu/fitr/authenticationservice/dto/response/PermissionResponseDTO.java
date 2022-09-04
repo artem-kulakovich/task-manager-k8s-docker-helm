@@ -1,17 +1,16 @@
 package by.bntu.fitr.authenticationservice.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.time.OffsetDateTime;
 import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class PermissionResponseDTO {
     @JsonProperty(value = "id")
     private Long id;
@@ -20,5 +19,5 @@ public class PermissionResponseDTO {
     private String name;
 
     @JsonProperty(value = "createAt")
-    private Date createAt;
+    private OffsetDateTime createAt;
 }

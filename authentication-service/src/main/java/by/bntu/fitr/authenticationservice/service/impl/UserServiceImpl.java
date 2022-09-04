@@ -55,8 +55,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByUserName(final String userName) {
-        return userDAO.findUserByUserName(userName).orElseThrow(
+    public User getUserByUserName(final String userName, final String fetchType, final int inheritLvl) {
+        return userDAO.findUserByUserName(userName, fetchType, inheritLvl).orElseThrow(
                 () -> new UserNotFoundException(CommonConstant.USER)
         );
     }
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
         Role role = roleService.createIfNotExists(RoleConstant.USER);
         Permission permission = permissionService.createIfNotExists(PermissionConstant.READ);
         role.setPermissionList(Collections.singletonList(permission));
-        user.setRoleId(Integer.valueOf(String.valueOf(role.getId())));
+        user.setRoleId(role.getId().intValue());
         user.setPassword(jwtUtil.encodeWithMD5(user.getPassword()));
         return userDAO.save(user);
     }
@@ -85,7 +85,9 @@ public class UserServiceImpl implements UserService {
     public String login(final UserLoginRequestDTO userLoginRequestDTO) {
 
         try {
-            User user = getUserByUserName(userLoginRequestDTO.getUserName());
+            User user = getUserByUserName(userLoginRequestDTO.getUserName(),
+                    CommonConstant.FetchType.EAGER,
+                    CommonConstant.InheritLvl.USER_WITH_ROLE_AND_PERMISSION);
             return jwtTokenProvider.createToken(user.getId(),
                     user.getUserName(),
                     user.getEmail(),
@@ -99,19 +101,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isUserExists(final String userName) {
-        return userDAO.findUserByUserName(userName).isPresent();
+        return userDAO.findUserByUserName(userName,
+                CommonConstant.FetchType.LAZY,
+                CommonConstant.InheritLvl.USER_WITH_NONE).isPresent();
     }
 
     @Override
-    public User getUserById(final Long id) {
-        return userDAO.findUserById(id, CommonConstant.FETCH_TYPE_EAGER).orElseThrow(
+    public User getUserById(final Long id, final String fetchType, final int inheritLvl) {
+        return userDAO.findUserById(id, fetchType, inheritLvl).orElseThrow(
                 () -> new UserNotFoundException(CommonConstant.USER)
         );
     }
 
     @Override
-    public User getUserByEmail(final String email) {
-        return userDAO.findUserByEmail(email).orElseThrow(() -> new UserNotFoundException(CommonConstant.USER));
+    public User getUserByEmail(final String email, final String fetchType, final int inheritLvl) {
+        return userDAO.findUserByEmail(email, fetchType, inheritLvl)
+                .orElseThrow(() -> new UserNotFoundException(CommonConstant.USER));
     }
 
     @Override

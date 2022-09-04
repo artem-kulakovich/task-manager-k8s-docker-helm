@@ -1,17 +1,16 @@
 package by.bntu.fitr.authenticationservice.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor
+@Builder
 @Setter
 public class UserResponseDTO {
     @JsonProperty(value = "id")
@@ -30,7 +29,10 @@ public class UserResponseDTO {
     private String email;
 
     @JsonProperty(value = "createAt")
-    private Date createAt;
+    private OffsetDateTime createAt;
+
+    @JsonProperty(value = "roleId")
+    private Integer roleId;
 
     @JsonProperty(value = "role")
     private RoleResponseDTO roleResponseDTO;

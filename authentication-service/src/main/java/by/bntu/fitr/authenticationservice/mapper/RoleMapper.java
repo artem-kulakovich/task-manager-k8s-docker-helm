@@ -3,6 +3,7 @@ package by.bntu.fitr.authenticationservice.mapper;
 import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.Role;
 import by.bntu.fitr.authenticationservice.dto.response.RoleResponseDTO;
 
+import lombok.NoArgsConstructor;
 import org.jooq.Record;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,16 +12,17 @@ import static by.bntu.fitr.authenticationservice.dao.jooq.tables.Role.ROLE;
 
 
 @Component
+@NoArgsConstructor
 public class RoleMapper {
-    private final PermissionMapper permissionMapper;
-
-    @Autowired
-    public RoleMapper(PermissionMapper permissionMapper) {
-        this.permissionMapper = permissionMapper;
-    }
 
     public RoleResponseDTO toRoleResponseDTO(final Role role) {
-        return null;
+        return role == null
+                ? null
+                : RoleResponseDTO.builder()
+                .id(role.getId())
+                .name(role.getName())
+                .createAt(role.getCreateAt())
+                .build();
     }
 
 

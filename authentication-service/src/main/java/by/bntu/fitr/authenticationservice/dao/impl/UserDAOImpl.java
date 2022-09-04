@@ -3,8 +3,11 @@ package by.bntu.fitr.authenticationservice.dao.impl;
 import by.bntu.fitr.authenticationservice.constant.CommonConstant;
 import by.bntu.fitr.authenticationservice.dao.RoleDAO;
 import by.bntu.fitr.authenticationservice.dao.UserDAO;
+import by.bntu.fitr.authenticationservice.dao.jooq.tables.Role;
+import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.Permission;
 import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.User;
 import by.bntu.fitr.authenticationservice.dao.jooq.tables.records.UserRecord;
+import by.bntu.fitr.authenticationservice.handler.DBHandler;
 import by.bntu.fitr.authenticationservice.mapper.RoleMapper;
 import by.bntu.fitr.authenticationservice.mapper.UserMapper;
 import org.jooq.DSLContext;
@@ -15,14 +18,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static by.bntu.fitr.authenticationservice.dao.jooq.tables.User.USER;
+import static by.bntu.fitr.authenticationservice.dao.jooq.tables.Permission.PERMISSION;
 import static by.bntu.fitr.authenticationservice.dao.jooq.tables.Role.ROLE;
+import static by.bntu.fitr.authenticationservice.dao.jooq.tables.RolePermissions.ROLE_PERMISSIONS;
 
 
 @Component
@@ -30,15 +34,19 @@ public class UserDAOImpl implements UserDAO {
     private final DSLContext dslContext;
     private final UserMapper userMapper;
 
+    private final DBHandler dbHandler;
+
     private final RoleMapper roleMapper;
 
     @Autowired
     public UserDAOImpl(final DSLContext dslContext,
                        final UserMapper userMapper,
-                       final RoleMapper roleMapper) {
+                       final RoleMapper roleMapper,
+                       final DBHandler dbHandler) {
         this.dslContext = dslContext;
         this.userMapper = userMapper;
         this.roleMapper = roleMapper;
+        this.dbHandler = dbHandler;
     }
 
     @SuppressWarnings("all")
@@ -52,47 +60,48 @@ public class UserDAOImpl implements UserDAO {
                 .set(USER.PASSWORD, user.getPassword())
                 .set(USER.CREATE_AT, OffsetDateTime.now())
                 .set(USER.ROLE_ID, user.getRoleId())
-                .returning(USER.ID)
+                .returning(USER.ID, USER.USER_NAME, USER.LAST_NAME, USER.EMAIL,
+                        USER.PASSWORD, USER.FIRST_NAME, USER.CREATE_AT, USER.ROLE_ID)
                 .fetchOne();
-        return getUserEntity(userRecord);
+        dbHandler.userExecuteWithFetchType(dslContext, user, CommonConstant.FetchType.EAGER
+                , CommonConstant.InheritLvl.USER_WITH_ROLE_AND_PERMISSION);
+        return userMapper.toUser(userRecord);
     }
 
     @SuppressWarnings("all")
     @Override
-    public Optional<User> findUserById(final Long id, String fetchType) {
+    public Optional<User> findUserById(final Long id, final String fetchType, final int inheritLvl) {
         Record userRecord = dslContext.select()
                 .from(USER)
                 .where(USER.ID.equal(id))
                 .fetchOne();
         User user = userMapper.toUser(userRecord);
-        if (fetchType.equals(CommonConstant.FETCH_TYPE_EAGER)) {
-            Record roleRecord = dslContext.select()
-                    .from(ROLE)
-                    .where(ROLE.ID.eq(Long.valueOf(userRecord.getValue(USER.ROLE_ID))))
-                    .fetchOne();
-            user.setRole(roleMapper.toRole(roleRecord));
-        }
-        return Optional.of(user);
+        dbHandler.userExecuteWithFetchType(dslContext, user, fetchType, inheritLvl);
+        return Optional.ofNullable(user);
     }
 
     @SuppressWarnings("all")
     @Override
-    public Optional<User> findUserByEmail(final String email) {
-        Record record = dslContext.select()
+    public Optional<User> findUserByEmail(final String email, final String fetchType, final int inheritLvl) {
+        Record userRecord = dslContext.select()
                 .from(USER)
                 .where(USER.EMAIL.equal(email))
                 .fetchOne();
-        return Optional.of(getUserEntity(record));
+        User user = userMapper.toUser(userRecord);
+        dbHandler.userExecuteWithFetchType(dslContext, user, fetchType, inheritLvl);
+        return Optional.ofNullable(user);
     }
 
     @SuppressWarnings("all")
     @Override
-    public Optional<User> findUserByUserName(final String userName) {
-        Record record = dslContext.select()
+    public Optional<User> findUserByUserName(final String userName, final String fetchType, final int inheritLvl) {
+        Record userRecord = dslContext.select()
                 .from(USER)
                 .where(USER.USER_NAME.equal(userName))
                 .fetchOne();
-        return Optional.of(getUserEntity(record));
+        User user = userMapper.toUser(userRecord);
+        dbHandler.userExecuteWithFetchType(dslContext, user, fetchType, inheritLvl);
+        return Optional.ofNullable(user);
     }
 
     @SuppressWarnings("all")
@@ -100,24 +109,19 @@ public class UserDAOImpl implements UserDAO {
     public List<User> finaAllUsers() {
         Result<Record> records = dslContext.select()
                 .from(USER)
+                .join(ROLE).on(ROLE.ID.eq(USER.ID))
+                .join(ROLE_PERMISSIONS).on(ROLE.ID.eq(ROLE_PERMISSIONS.ROLE_ID.cast(Long.class)))
+                .join(PERMISSION).on(PERMISSION.ID.eq(ROLE_PERMISSIONS.PERMISSION_ID.cast(Long.class)))
                 .fetch();
-        return records.stream().map(this::getUserEntity).collect(Collectors.toList());
+        return null;
     }
 
+    private void delegate(Result<Record> recordResult) {
+        Map<Long, Map<Role, Permission>> userRole;
+        for (Record record : recordResult) {
+            System.out.println(record.getValue(USER.ID));
 
-    private User getUserEntity(final Record r) {
-        return r == null
-                ? null
-                : new User(
-                r.getValue(USER.ID),
-                r.getValue(USER.FIRST_NAME),
-                r.getValue(USER.LAST_NAME),
-                r.getValue(USER.USER_NAME),
-                r.getValue(USER.PASSWORD),
-                r.getValue(USER.EMAIL),
-                r.getValue(USER.CREATE_AT),
-                r.getValue(USER.ROLE_ID),
-                null
-        );
+        }
     }
+
 }
