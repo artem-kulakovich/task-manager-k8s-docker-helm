@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userDAO.finaAllUsers();
+    public List<User> getAllUsers(final String fetchType, final int inheritLvl) {
+        return userDAO.finaAllUsers(fetchType, inheritLvl);
     }
 }

@@ -15,6 +15,6 @@ public interface UserDAO {
 
     Optional<User> findUserByUserName(final String userName, final String fetchType, final int inheritLvl);
 
-    List<User> finaAllUsers();
+    List<User> finaAllUsers(final String fetchType, final int inheritLvl);
 
 }

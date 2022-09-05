@@ -1,6 +1,7 @@
 package by.bntu.fitr.authenticationservice.rest;
 
 import by.bntu.fitr.authenticationservice.constant.CommonConstant;
+import by.bntu.fitr.authenticationservice.dao.UserDAO;
 import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.User;
 import by.bntu.fitr.authenticationservice.dto.response.UserResponseDTO;
 import by.bntu.fitr.authenticationservice.handler.MapperHandler;
@@ -13,12 +14,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/authentication-service/users")
 public class UserRestController {
     private final UserService userService;
     private final MapperHandler mapperHandler;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UserDAO userDAO;
 
     @Autowired
     public UserRestController(final UserService userService,
@@ -55,7 +61,19 @@ public class UserRestController {
     }
 
     @GetMapping(value = "/")
-    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        return new ResponseEntity<>(null, HttpStatus.OK);
+    public ResponseEntity<List<by.bntu.fitr.authenticationservice.entity.User>> getAllUsers() {
+       /* List<User> userList = userService.getAllUsers(CommonConstant.FetchType.EAGER,
+                CommonConstant.InheritLvl.USER_WITH_ROLE_AND_PERMISSION);
+
+        List<UserResponseDTO> userResponseDTOList = userList.stream().map((user -> {
+            return mapperHandler.executeUserResponseDTOWithInherit(user,
+                    CommonConstant.InheritLvl.USER_WITH_ROLE_AND_PERMISSION);
+        })).collect(Collectors.toList());
+
+
+         */
+
+
+        return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
     }
 }

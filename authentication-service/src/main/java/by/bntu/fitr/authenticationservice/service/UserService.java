@@ -20,6 +20,6 @@ public interface UserService {
 
     User getUserByEmail(final String email, final String fetchType, final int inheritLvl);
 
-    List<User> getAllUsers();
+    List<User> getAllUsers(final String fetchType, final int inheritLvl);
 
 }

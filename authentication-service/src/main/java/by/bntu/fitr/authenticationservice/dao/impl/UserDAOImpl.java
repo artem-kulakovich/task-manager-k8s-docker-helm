@@ -33,19 +33,14 @@ import static by.bntu.fitr.authenticationservice.dao.jooq.tables.RolePermissions
 public class UserDAOImpl implements UserDAO {
     private final DSLContext dslContext;
     private final UserMapper userMapper;
-
     private final DBHandler dbHandler;
-
-    private final RoleMapper roleMapper;
 
     @Autowired
     public UserDAOImpl(final DSLContext dslContext,
                        final UserMapper userMapper,
-                       final RoleMapper roleMapper,
                        final DBHandler dbHandler) {
         this.dslContext = dslContext;
         this.userMapper = userMapper;
-        this.roleMapper = roleMapper;
         this.dbHandler = dbHandler;
     }
 
@@ -106,14 +101,9 @@ public class UserDAOImpl implements UserDAO {
 
     @SuppressWarnings("all")
     @Override
-    public List<User> finaAllUsers() {
-        Result<Record> records = dslContext.select()
-                .from(USER)
-                .join(ROLE).on(ROLE.ID.eq(USER.ID))
-                .join(ROLE_PERMISSIONS).on(ROLE.ID.eq(ROLE_PERMISSIONS.ROLE_ID.cast(Long.class)))
-                .join(PERMISSION).on(PERMISSION.ID.eq(ROLE_PERMISSIONS.PERMISSION_ID.cast(Long.class)))
-                .fetch();
-        return null;
+    public List<User> finaAllUsers(final String fetchType, final int inheritLvl) {
+        List<User> userList = dbHandler.usersExecuteWithFetchType(dslContext, null, CommonConstant.FetchType.EAGER, 2);
+        return userList;
     }
 
     private void delegate(Result<Record> recordResult) {
