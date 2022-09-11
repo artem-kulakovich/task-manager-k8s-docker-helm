@@ -14,6 +14,6 @@ public interface PermissionService {
 
     Permission createIfNotExists(final String name);
 
-    Permission getPermissionByNameOrElseNull(final String name);
+    Permission getPermissionByNameOrElseNull(final String name, final String fetchType);
 
 }

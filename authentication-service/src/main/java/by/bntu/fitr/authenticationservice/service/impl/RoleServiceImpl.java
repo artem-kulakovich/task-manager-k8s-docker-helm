@@ -22,8 +22,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role getRoleByName(final String name, final String fetchType, final int inheritLvl) {
-        return roleDAO.findRoleByName(name, fetchType, inheritLvl).orElseThrow(
+    public Role getRoleByName(final String name, final String fetchType) {
+        return roleDAO.findRoleByName(name, fetchType).orElseThrow(
                 () -> new RoleNotFoundException(CommonConstant.ROLE)
         );
     }
@@ -39,13 +39,13 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role getRoleByNameOrElseNull(final String name, final String fetchType, final int inheritLvl) {
-        return roleDAO.findRoleByName(name, fetchType, inheritLvl).orElse(null);
+    public Role getRoleByNameOrElseNull(final String name, final String fetchType) {
+        return roleDAO.findRoleByName(name, fetchType).orElse(null);
     }
 
     @Override
     public Role createIfNotExists(final String name) {
-        Role role = getRoleByNameOrElseNull(name, CommonConstant.FetchType.LAZY, CommonConstant.InheritLvl.ROLE_WITH_NONE);
+        Role role = getRoleByNameOrElseNull(name, CommonConstant.FetchType.LAZY);
         if (role == null) {
             role = roleDAO.save(roleFactory.getRole(name));
         }

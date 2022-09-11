@@ -9,11 +9,11 @@ public interface PermissionDAO {
 
     Permission save(final Permission permission);
 
-    Optional<Permission> findPermissionById(final Long id);
+    Optional<Permission> findPermissionById(final Long id, final String fetchType);
 
-    Optional<Permission> findPermissionByName(final String name);
+    Optional<Permission> findPermissionByName(final String name, final String fetchType);
 
-    List<Permission> findAllPermissions();
+    List<Permission> findAllPermissions(final String fetchType);
 
 
 }

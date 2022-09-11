@@ -8,7 +8,7 @@ import by.bntu.fitr.authenticationservice.dto.request.UserLoginRequestDTO;
 import java.util.List;
 
 public interface UserService {
-    User getUserByUserName(final String userName, final String fetchType, final int inheritLvl);
+    User getUserByUserName(final String userName, final String fetchType);
 
     User registerUser(final UserCreateRequestDTO userCreateRequestDTO);
 
@@ -16,10 +16,10 @@ public interface UserService {
 
     boolean isUserExists(final String userName);
 
-    User getUserById(final Long id, final String fetchType, final int inheritLvl);
+    User getUserById(final Long id, final String fetchType);
 
-    User getUserByEmail(final String email, final String fetchType, final int inheritLvl);
+    User getUserByEmail(final String email, final String fetchType);
 
-    List<User> getAllUsers(final String fetchType, final int inheritLvl);
+    List<User> getAllUsers(final String fetchType);
 
 }

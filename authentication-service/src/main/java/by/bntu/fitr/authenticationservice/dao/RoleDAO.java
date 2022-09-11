@@ -9,9 +9,9 @@ public interface RoleDAO {
 
     Role save(final Role role);
 
-    Optional<Role> findRoleById(final Long id, final String fetchType, final int inheritLvl);
+    Optional<Role> findRoleById(final Long id, final String fetchType);
 
-    Optional<Role> findRoleByName(final String name, final String fetchType, final int inheritLvl);
+    Optional<Role> findRoleByName(final String name, final String fetchType);
 
-    List<Role> findAllRoles();
+    List<Role> findAllRoles(final String fetchType);
 }

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class MapperHandler {
@@ -54,6 +53,7 @@ public class MapperHandler {
         return permissionResponseDTOList;
     }
 
+    /*
     public List<UserResponseDTO> userResponseDTOList(List<by.bntu.fitr.authenticationservice.entity.User> userList) {
         return userList.stream().map((user) ->
                 new UserResponseDTO(
@@ -85,4 +85,6 @@ public class MapperHandler {
                     offsetDateTime);
         })).collect(Collectors.toList());
     }
+
+     */
 }

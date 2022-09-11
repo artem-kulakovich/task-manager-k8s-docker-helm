@@ -88,7 +88,7 @@ public class DBHandler {
 
             rolesExecuteWithFetchType(dslContext, roleList, fetchType, --inheritLvl);
 
-         */
+
 
         Result<Record> recordResult = dslContext.select()
                 .from(USER)
@@ -117,7 +117,9 @@ public class DBHandler {
                 users.add(user);
             }
         }
-        return users;
+
+         */
+        return null;
     }
 
     public void rolesExecuteWithFetchType(DSLContext dslContext, List<Role> roleList, String fetchType, int inheritLvl) {

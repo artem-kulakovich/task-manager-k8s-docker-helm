@@ -1,5 +1,6 @@
 package by.bntu.fitr.authenticationservice.service.impl;
 
+import by.bntu.fitr.authenticationservice.constant.CommonConstant;
 import by.bntu.fitr.authenticationservice.dao.PermissionDAO;
 import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.Permission;
 import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.Role;
@@ -38,7 +39,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public Permission createIfNotExists(final String name) {
-        Permission permission = getPermissionByNameOrElseNull(name);
+        Permission permission = getPermissionByNameOrElseNull(name, CommonConstant.FetchType.LAZY);
         if (permission == null) {
             permission = permissionDAO.save(permissionFactory.getPermission(name));
         }
@@ -46,8 +47,8 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public Permission getPermissionByNameOrElseNull(final String name) {
-        return permissionDAO.findPermissionByName(name).orElse(null);
+    public Permission getPermissionByNameOrElseNull(final String name, final String fetchType) {
+        return permissionDAO.findPermissionByName(name, fetchType).orElse(null);
     }
 
 }
