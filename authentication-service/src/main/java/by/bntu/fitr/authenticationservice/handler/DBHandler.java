@@ -21,6 +21,7 @@ import static by.bntu.fitr.authenticationservice.dao.jooq.tables.Role.ROLE;
 import static by.bntu.fitr.authenticationservice.dao.jooq.tables.RolePermissions.ROLE_PERMISSIONS;
 import static by.bntu.fitr.authenticationservice.dao.jooq.tables.User.USER;
 
+@Deprecated
 @Component
 public class DBHandler {
     private final RoleMapper roleMapper;

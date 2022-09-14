@@ -32,9 +32,9 @@ public class RoleDAOImpl extends AbstractDAO<Role>
     private final PermissionMapper permissionMapper;
 
     @Autowired
-    private RoleDAOImpl(final DSLContext dslContext,
-                        final RoleMapper roleMapper,
-                        final PermissionMapper permissionMapper) {
+    public RoleDAOImpl(final DSLContext dslContext,
+                       final RoleMapper roleMapper,
+                       final PermissionMapper permissionMapper) {
         this.dslContext = dslContext;
         this.roleMapper = roleMapper;
         this.permissionMapper = permissionMapper;

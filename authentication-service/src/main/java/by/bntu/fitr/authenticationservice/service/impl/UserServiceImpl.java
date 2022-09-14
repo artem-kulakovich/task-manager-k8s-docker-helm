@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
         role.setPermissionList(Collections.singletonList(permission));
         user.setRoleId(role.getId().intValue());
         user.setPassword(jwtUtil.encodeWithMD5(user.getPassword()));
-        return userDAO.save(user);
+        return userDAO.save(user).setRole(role);
     }
 
     @Override
