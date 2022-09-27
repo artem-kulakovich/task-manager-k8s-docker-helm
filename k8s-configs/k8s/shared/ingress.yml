@@ -1,2 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
+metadata:
+  name: authentication-ingress
+  annotation:
+    kubernetes.io./ingress.class: nginx
+spec:
+  rules:
+    - host: k8s.task-manager.com
+      http:
+        paths:
+          - path: authentication-service
+            backend:
+              serviceName: authentication-service
+              servicePost: 8080
