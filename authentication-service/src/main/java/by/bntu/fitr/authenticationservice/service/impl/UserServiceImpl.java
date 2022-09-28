@@ -82,19 +82,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String login(final UserLoginRequestDTO userLoginRequestDTO) {
+    public String login(final String userName, final String password) {
 
-        try {
-            User user = getUserByUserName(userLoginRequestDTO.getUserName(), CommonConstant.FetchType.EAGER);
-            return jwtTokenProvider.createToken(user.getId(),
-                    user.getUserName(),
-                    user.getEmail(),
-                    roleService.getRoleName(user.getRole()),
-                    permissionService.getRolePermissionsName(user.getRole())
-            );
-        } catch (UserNotFoundException e) {
+        User user = getUserByUserName(userName, CommonConstant.FetchType.EAGER);
+        if (!user.getPassword().equals(jwtUtil.encodeWithMD5(password))) {
             throw new LoginException(ErrorMessageConstant.CANT_LOGIN_EXCEPTION_MSG);
         }
+        return jwtTokenProvider.createToken(user.getId(),
+                user.getUserName(),
+                user.getEmail(),
+                roleService.getRoleName(user.getRole()),
+                permissionService.getRolePermissionsName(user.getRole())
+        );
     }
 
     @Override

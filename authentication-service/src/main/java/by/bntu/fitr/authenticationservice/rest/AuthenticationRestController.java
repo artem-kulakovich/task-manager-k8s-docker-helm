@@ -39,9 +39,9 @@ public class AuthenticationRestController {
             @ApiResponse(code = 403, message = "forbiden", response = HttpResponse.class)
     })
     @GetMapping(value = "/login")
-    public ResponseEntity<String> login(@ApiParam(value = "user parameters to be login")
-                                        @RequestBody @Valid final UserLoginRequestDTO userLoginRequestDTO) {
-        return new ResponseEntity<>(userService.login(userLoginRequestDTO), HttpStatus.OK);
+    public ResponseEntity<String> login(@RequestParam(name = "userName") final String userName,
+                                        @RequestParam(name = "password") final String password) {
+        return new ResponseEntity<>(userService.login(userName, password), HttpStatus.OK);
     }
 
     @ApiOperation(value = "register", httpMethod = "POST")

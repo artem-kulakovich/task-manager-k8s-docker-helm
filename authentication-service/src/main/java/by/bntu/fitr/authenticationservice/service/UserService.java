@@ -12,7 +12,7 @@ public interface UserService {
 
     User registerUser(final UserCreateRequestDTO userCreateRequestDTO);
 
-    String login(final UserLoginRequestDTO userLoginRequestDTO);
+    String login(final String userName, final String password);
 
     boolean isUserExists(final String userName);
 

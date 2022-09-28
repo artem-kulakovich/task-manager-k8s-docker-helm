@@ -5,7 +5,6 @@ import by.bntu.fitr.authenticationservice.dao.RoleDAO;
 import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.Permission;
 import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.Role;
 import by.bntu.fitr.authenticationservice.dao.jooq.tables.records.RoleRecord;
-import by.bntu.fitr.authenticationservice.handler.DBHandler;
 import by.bntu.fitr.authenticationservice.mapper.PermissionMapper;
 import by.bntu.fitr.authenticationservice.mapper.RoleMapper;
 import org.jooq.DSLContext;
@@ -19,7 +18,6 @@ import java.time.OffsetDateTime;
 import java.util.*;
 
 import static by.bntu.fitr.authenticationservice.dao.jooq.tables.Role.ROLE;
-import static by.bntu.fitr.authenticationservice.dao.jooq.tables.User.USER;
 import static by.bntu.fitr.authenticationservice.dao.jooq.tables.Permission.PERMISSION;
 import static by.bntu.fitr.authenticationservice.dao.jooq.tables.RolePermissions.ROLE_PERMISSIONS;
 
@@ -28,7 +26,6 @@ public class RoleDAOImpl extends AbstractDAO<Role>
         implements RoleDAO {
     private final DSLContext dslContext;
     private final RoleMapper roleMapper;
-
     private final PermissionMapper permissionMapper;
 
     @Autowired
@@ -47,6 +44,9 @@ public class RoleDAOImpl extends AbstractDAO<Role>
                 .set(ROLE.CREATE_AT, OffsetDateTime.now())
                 .returning(ROLE.ID)
                 .fetchOne();
+        int executeResult = dslContext.insertInto(ROLE_PERMISSIONS)
+                .set(ROLE_PERMISSIONS.ROLE_ID, roleRecord.getValue(ROLE.ID, Integer.class))
+                .execute();
         return roleMapper.toRole(roleRecord);
     }
 

@@ -4,6 +4,7 @@ import by.bntu.fitr.authenticationservice.constant.CommonConstant;
 import by.bntu.fitr.authenticationservice.dao.PermissionDAO;
 import by.bntu.fitr.authenticationservice.dao.jooq.tables.entity.Permission;
 import by.bntu.fitr.authenticationservice.dao.jooq.tables.records.PermissionRecord;
+import by.bntu.fitr.authenticationservice.dao.jooq.tables.records.RolePermissionsRecord;
 import by.bntu.fitr.authenticationservice.mapper.PermissionMapper;
 import org.jooq.DSLContext;
 import org.jooq.Record;
@@ -16,8 +17,8 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+import static by.bntu.fitr.authenticationservice.dao.jooq.tables.RolePermissions.ROLE_PERMISSIONS;
 import static by.bntu.fitr.authenticationservice.dao.jooq.tables.Permission.PERMISSION;
 
 @Component
@@ -41,6 +42,9 @@ public class PermissionDAOImpl extends AbstractDAO<Permission>
                 .set(PERMISSION.CREATE_AT, OffsetDateTime.now())
                 .returning(PERMISSION.ID, PERMISSION.NAME, PERMISSION.CREATE_AT)
                 .fetchOne();
+        int executeResult = dslContext.insertInto(ROLE_PERMISSIONS)
+                .set(ROLE_PERMISSIONS.PERMISSION_ID,permissionRecord.getValue(PERMISSION.ID, Integer.class))
+                .execute();
         return permissionMapper.toPermission(permissionRecord);
     }
 

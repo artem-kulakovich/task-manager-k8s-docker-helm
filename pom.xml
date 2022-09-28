@@ -14,6 +14,8 @@
     <module>task-service</module>
     <module>authentication-service</module>
     <module>k8s-configs</module>
+    <module>docker-compose-configs</module>
+    <module>notification-service</module>
   </modules>
   <build>
     <finalName>${project.artifactId}</finalName>
