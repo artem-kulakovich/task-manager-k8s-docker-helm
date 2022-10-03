@@ -31,7 +31,7 @@ public class ProjectRestController {
                 HttpStatus.OK);
     }
 
-    @PostMapping(value = "/")
+    @PostMapping(value = "")
     public ResponseEntity<ProjectResponseDTO> createProject(@RequestBody final ProjectCreateRequestDTO projectCreateRequestDTO) {
         return new ResponseEntity<>(projectMapper
                 .toProjectResponseDTO(projectService.createProject(projectCreateRequestDTO)), HttpStatus.OK);

@@ -71,7 +71,7 @@ public class UserRestController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful operation", response = List.class)
     })
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         List<User> userList = userService.getAllUsers(CommonConstant.FetchType.EAGER);
 

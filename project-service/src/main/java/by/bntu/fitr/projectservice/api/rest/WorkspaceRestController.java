@@ -24,13 +24,13 @@ public class WorkspaceRestController {
         this.workspaceMapper = workspaceMapper;
     }
 
-    @PostMapping(value = "/")
+    @PostMapping(value = "")
     public ResponseEntity<WorkspaceResponseDTO> createWorkspace(@RequestBody final WorkspaceCreateRequestDTO workspaceCreateRequestDTO) {
         return new ResponseEntity<>(workspaceMapper
                 .toWorkspaceResponseDTO(workspaceService.createWorkspace(workspaceCreateRequestDTO)), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     public ResponseEntity<List<WorkspaceResponseDTO>> getAllWorkspaces() {
         return new ResponseEntity<>(workspaceMapper
                 .toWorkspaceResponseDTOList(workspaceService.getAllWorkspacesBelongedToCurrentUser()), HttpStatus.OK);
